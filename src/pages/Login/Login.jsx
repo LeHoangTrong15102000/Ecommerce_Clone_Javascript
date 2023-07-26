@@ -4,7 +4,7 @@ import { callLogin } from '../../services/api';
 import './login.scss';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-// import { doLoginAction } from '../../redux/account/accountSlice';
+import { doLoginAction } from '../../redux/account/accountSlice';
 
 const Login = () => {
   const navigate = useNavigate();

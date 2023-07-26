@@ -1,7 +1,11 @@
-import React from 'react';
+import './footer.scss';
 
 const Footer = () => {
-  return <div>Footer</div>;
+  return (
+    <footer>
+      <div>Khóa Học React Test Fresher &copy; by Hỏi Dân IT</div>
+    </footer>
+  );
 };
 
 export default Footer;

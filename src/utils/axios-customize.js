@@ -4,11 +4,14 @@ const baseUrl = import.meta.env.VITE_BACKEND_URL;
 
 const instance = axios.create({
   baseURL: baseUrl,
-  withCredentials: true,
+  withCredentials: true, // set bằng true thì kể từ bây giờ FE và BE của chúng ta có thể trao đổi cookies được rồi, lúc trước do HttpOnly= true nên chỉ có BE mới có thể sử dụng được cookies
+  // Việc check token hợp lệ hay không được phép sử dụng hay không, có quyền gì hay không thì BE sẽ làm phần đó cho chúng ta, còn việc FE là lưu token về và sử dụng
+  // Ở phần này chúng ta không cần lưu  RT về nó đã lưu sẵn dưới cookies rồi -> Chỉ cần lấy về rồi dùng thôi
 });
 
+const access_token = localStorage.getItem('access_token');
 instance.defaults.headers.common = {
-  Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+  Authorization: `Bearer ${access_token}`,
 };
 
 const handleRefreshToken = async () => {
