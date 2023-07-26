@@ -34,13 +34,17 @@ export default function App() {
 
   const getAccount = async () => {
     // Nếu đang url login hay register thì trả về undefined
+    // Ban đầu kih chưa đăng nhập hoặc là chưa đăng kí thì không gọi getAccount()
     if (window.location.pathname === '/login' || window.location.pathname === '/register')
       return;
 
     const res = await callFetchAccount();
-    if (res && res?.data) dispatch(doGetAccountAction(res.data));
+
+    //  Mỗi là chúng ta F5 lại trang, bản chất của vấn đề ở đây là chúng ta gọi lại api và chúng ta lấy thông tin user
+    if (res && res?.data) dispatch(doGetAccountAction(res.data)); // Sau khi đã lấy được thông tin user rồi thì chúng ta nạp ngược lại redux
   };
 
+  //  Viết trong useEffect bởi vì bây giờ là lúc dom nó đã được render
   useEffect(() => {
     getAccount();
   }, []);
@@ -66,6 +70,7 @@ export default function App() {
       ],
     },
 
+    // Sẽ viết cái layout riêng cho phần admin
     {
       path: '/admin',
       element: <LayoutAdmin />,

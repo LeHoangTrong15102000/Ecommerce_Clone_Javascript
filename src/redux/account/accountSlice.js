@@ -14,12 +14,14 @@ const initialState = {
   },
 };
 
+// Chúng ta cần nạp lại data cho thằng redux mỗi lần chúng ta F5 lại trang
+
 export const accountSlice = createSlice({
   name: 'account',
   initialState,
   reducers: {
     doLoginAction: (state, action) => {
-      state.isAuthenticated = true;
+      state.isAuthenticated = true; // Do nó đã sử dụng thư viện immerjs nên chúng ta có thể modify trực tiếp ko lo bị ảnh hưởng
       state.isLoading = false;
       state.user = action.payload;
     },
