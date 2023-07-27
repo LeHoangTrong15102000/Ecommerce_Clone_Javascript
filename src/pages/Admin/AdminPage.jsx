@@ -1,7 +1,12 @@
-import React from 'react';
+import InputSearch from './../../components/Admin/UserTable/InputSearch';
+import UserTable from './../../components/Admin/UserTable/UserTable';
 
 const AdminPage = () => {
-  return <>Adminn dashboard</>;
+  return (
+    <>
+      <UserTable />
+    </>
+  );
 };
 
 export default AdminPage;

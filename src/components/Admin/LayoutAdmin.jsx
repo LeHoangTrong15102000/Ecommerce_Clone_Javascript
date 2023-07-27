@@ -124,7 +124,7 @@ const LayoutAdmin = () => {
             </a>
           </Dropdown>
         </div>
-        <Content>
+        <Content style={{ margin: '20px' }}>
           <Outlet />
         </Content>
         <Footer style={{ padding: 0 }}>

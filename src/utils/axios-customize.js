@@ -14,6 +14,7 @@ instance.defaults.headers.common = {
   Authorization: `Bearer ${access_token}`,
 };
 
+//  Để mà lấy được RefreshToken thì mặc định chúng ta phải có Cookies, cookies nó đã trả về sẵn cho chúng ta rồi
 const handleRefreshToken = async () => {
   const res = await instance.get('/api/v1/auth/refresh');
   if (res && res.data) return res.data.access_token;
@@ -47,18 +48,21 @@ instance.interceptors.response.use(
     if (
       error.config &&
       error.response &&
+      // Thêm dấu '+'  để khi mà nó trả về một chuỗi string thì sẽ convert nó về một số nguyên
       +error.response.status === 401 &&
       !error.config.headers[NO_RETRY_HEADER]
     ) {
-      const access_token = await handleRefreshToken();
-      error.config.headers[NO_RETRY_HEADER] = 'true';
+      const access_token = await handleRefreshToken(); //  Lấy ra access_token mới
+      error.config.headers[NO_RETRY_HEADER] = 'true'; // nó sẽ chạy vào cái `key x-no-retry` trong `config.headers` và nó biết là biến này có giá trị
       if (access_token) {
         error.config.headers['Authorization'] = `Bearer ${access_token}`;
-        localStorage.setItem('access_token', access_token);
-        return instance.request(error.config);
+        localStorage.setItem('access_token', access_token); // Lấy ra được access_token mới thì gán nó vào lại localStorage
+        return instance.request(error.config); // phải return về instance.request(error.config) khi mà nó có lỗi về token để người dùng mới được phép đăng nhập tiếp
       }
     }
 
+    // Nếu RefreshToken và url = '/api/v1/auth/refresh' thì chúng ta sẽ đá người dùng về trang login
+    // Việc chúng ta redirects người dùng thì nó sẽ refresh lại trang và nó sẽ không ghi lại load phần Api nào hết
     if (
       error.config &&
       error.response &&

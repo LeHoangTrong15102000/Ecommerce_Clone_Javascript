@@ -10,11 +10,33 @@
 
 > 20 Axios Retry - Handle Refresh Token
 
+- Cái thư viện ms sẽ convert chuỗi string sang `ms` cho chúng ta -> Ở phía BE của chúng ta nó chỉ hiểu ms mà thôi nên cần phải convert về
+
+- Sẽ dùng cơ chế re-try khi mà gọi Api fail thì sẽ gọi lại Api bị failed bằng cách thêm vào `RefreshToken` để lấy ra được `access_token` mới
+
+- Nếu mà hàm bất đồng bộ thì bắt buộc chúng ta phải có `async await` và nó phải chờ code cho chúng ta nếu không thì chúng ta cần phải 'chấm' .then() để biết rằng đây là một hành động bất đồng bộ và nó sẽ trả về một Promise<>
+
+- Nhưng nó vẫn bị lỗi do con Redux ko được nạp vào data của `User`
+
+- Trong trường hợp mà cái handleRefreshToken nó trả ra mã lỗi là 401 luôn thì nó sẽ Retry liên tục đãn tới bị lập vô hạn, nó sẽ chạy không bao giờ ngừng nghỉ luôn -> Nên trong thực tế để tránh thực hiện cái vòng lập này vô hạn, -> Chúng ta sẽ đặt một cái `Flag` nếu chúng ta đã retry rồi thì lần sau gọi 401 chúng ta sẽ không `retry` nữa -> Chỉ được retry được đúng 1 lần
+  ++ Mặc định tham số headers[NO_RETRY_HEADER] nó sẽ không có tồn tại trong headers nó chỉ tồn tại khi nó bằng `true` , khi mà nó đã có giá trị rồi
+  cho người dùng
+
 > 21 Fix lỗi hết hạn RefreshToken
+
+- Trong thực tế con trường hợp gây ra lỗi nữa là cái `refreshToken` nó hết hạn
 
 ## Module Users
 
 > 22 Giới thiệu Table Component
+
+- Chúng ta sẽ filter theo nhiều tiêu chí, chúng ta có thể filter một lúc nhiều trường dữ liệu, còn table của `antd` chỉ filter được theo 1 trường -> Nên chúng ta sẽ tổ chức thanh search `filter` để filter theo nhiều trường dũ liệu
+
+- Việc mà muốn filter theo nhiều tiêu chí thì sang version2 của thz Antd là `Antd Pro` nó sẽ làm điều đó cho chúng ta
+
+- Sau này mỗi lần chúng ta nhấn vào thz sort thì chúng ta sẽ gọi Api và sắp xếp lại dữ liệu luôn chứ không phải là chúng ta sắp xếp chỉ trên 1 trang
+
+- Đối với cái table của chúng ta mỗi lần chúng ta nhấn `onChange` nó sẽ hiện tất cả các tham số chúng ta đã cấu hình trên màn hình cho chúng ta
 
 > 23 Api hiển thị danh sách User
 

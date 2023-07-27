@@ -75,7 +75,7 @@ const UserTable = () => {
             columns={columns}
             dataSource={data}
             onChange={onChange}
-            pagination={{ current: 1, pageSize: 1, showSizeChanger: true }}
+            pagination={{ current: 1, pageSize: 10, showSizeChanger: true }}
           />
         </Col>
       </Row>
