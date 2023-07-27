@@ -19,6 +19,7 @@ const Login = () => {
     setIsSubmit(false);
     if (res?.data) {
       localStorage.setItem('access_token', res.data.access_token);
+      // console.log(res.data);
       dispatch(doLoginAction(res.data.user));
       message.success('Đăng nhập tài khoản thành công!');
       navigate('/');
@@ -67,7 +68,12 @@ const Login = () => {
               <Form.Item
               // wrapperCol={{ offset: 6, span: 16 }}
               >
-                <Button type="primary" htmlType="submit" loading={isSubmit}>
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  loading={isSubmit}
+                  style={{ backgroundColor: '#1677ff' }}
+                >
                   Đăng nhập
                 </Button>
               </Form.Item>

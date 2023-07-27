@@ -84,6 +84,7 @@ export default function App() {
             </ProtectedRoute>
           ),
         },
+        // Khi đã vào được AdminPage rồi thì không cần phải chèn `ProtectedRoute` vào những thz bên trong nữa
         {
           path: 'user',
           element: <Contact />,

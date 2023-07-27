@@ -16,6 +16,7 @@ const Header = () => {
   const [openDrawer, setOpenDrawer] = useState(false);
   const isAuthenticated = useSelector((state) => state.account.isAuthenticated);
   const user = useSelector((state) => state.account.user);
+  // console.log('Check user >>>>', user);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -27,6 +28,8 @@ const Header = () => {
       navigate('/');
     }
   };
+
+  const hanndleLoginAction = async () => {};
 
   const items = [
     {
@@ -61,7 +64,7 @@ const Header = () => {
                 <span>Hỏi Dân IT</span>
                 <VscSearchFuzzy
                   className="icon-search"
-                  style={{ left: 0, top: 20, marginLeft: 10 }}
+                  style={{ left: 30, top: 20, marginLeft: 10 }}
                 />
               </span>
               <input

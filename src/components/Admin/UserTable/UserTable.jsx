@@ -4,6 +4,7 @@ import InputSearch from './InputSearch';
 
 // https://stackblitz.com/run?file=demo.tsx
 const UserTable = () => {
+  // items hiển thị ra bên ngoài giao diện
   const columns = [
     {
       title: 'Name',

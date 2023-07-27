@@ -62,11 +62,18 @@ const LayoutAdmin = () => {
   const handleLogout = async () => {
     const res = await callLogout();
     if (res && res?.data) {
-      dispatch(doLogoutAction(res.data));
-      toast.success('Đăng xuất thành công');
+      dispatch(doLogoutAction());
+      message.success('Đăng xuất thành công');
       navigate('/');
     }
   };
+
+  // sử dụng createAsyncThunk để logout
+  // const handleLogout = () => {
+  //   dispatch(handleLogoutAction());
+  //   message.success('Đăng xuất thành công');
+  //   navigate('/');
+  // };
 
   const itemsDropdown = [
     {
@@ -84,6 +91,7 @@ const LayoutAdmin = () => {
   ];
   return (
     <Layout style={{ minHeight: '100vh' }} className="layout-admin">
+      {/* Sider quản lí thông tin của ecommerce */}
       <Sider
         theme="light"
         collapsible
@@ -98,6 +106,7 @@ const LayoutAdmin = () => {
           onClick={(event) => setActiveMenu(event.key)}
         />
       </Sider>
+      {/* Layout nội dung chính */}
       <Layout>
         <div className="admin-header">
           <span>
@@ -106,7 +115,7 @@ const LayoutAdmin = () => {
               onClick: () => setCollapsed(!collapsed),
             })}
           </span>
-          <Dropdown menu={{ item: itemsDropdown }} trigger={['click']}>
+          <Dropdown menu={{ items: itemsDropdown }} trigger={['click']}>
             <a onClick={(event) => event.preventDefault()}>
               <Space>
                 Welcome {user?.fullName}
