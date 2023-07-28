@@ -11,19 +11,29 @@ const UserTable = () => {
   const [pageSize, setPageSize] = useState(5); // pageSize mặc định cho nó là 2 nếu có lẻ 1 bản ghi thì sẽ thay thế pageSize === pagination.pageSize
   const [total, setTotal] = useState(0); // tham số này để biết được chúng ta cần có bao nhiêu trang
 
+  const [isLoading, setIsLoading] = useState(false);
+
   // Khi mà current và pageSize thay đổi thì useEffect() sẽ chạy lại
   useEffect(() => {
     fetchUser();
   }, [current, pageSize]);
 
-  const fetchUser = async () => {
-    const query = `current=${current}&pageSize=${pageSize}`;
+  const fetchUser = async (searchFilter) => {
+    setIsLoading(true);
+
+    let query = `current=${current}&pageSize=${pageSize}`;
+
+    if (searchFilter) {
+      query += `&${searchFilter}`;
+    }
     const res = await callFetchListUser(query);
 
     if (res && res.data) {
       setListUser(res.data.result);
       setTotal(res.data.meta.total);
     }
+
+    setIsLoading(false);
   };
 
   // Thực hiện gọi Api phân trang
@@ -110,15 +120,23 @@ const UserTable = () => {
     console.log('params', pagination, filters, sorter, extra);
   };
 
+  // Hàm handle Search
+
+  const handleSearch = (query) => {
+    fetchUser(query);
+  };
+
   return (
     <>
       <Row gutter={[20, 20]}>
         <Col span={24}>
-          <InputSearch />
+          <InputSearch handleSearch={handleSearch} />
         </Col>
         <Col span={24}>
           <Table
             className="def"
+            // title={renderHeader}
+            loading={isLoading}
             columns={columns}
             dataSource={listUser}
             onChange={onChange}

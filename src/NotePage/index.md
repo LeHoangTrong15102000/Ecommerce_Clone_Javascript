@@ -67,6 +67,10 @@
 
 - Do `query` trên `Url` là so sánh tuyệt đối nếu tên truyền vào không đúng chính xác thì nó sẽ không trả ra kết quả chúng ta không muốn điều đó -> Chúng ta nó muốn nó giống như là toán tử `Like` trong `sql` là `Nó sẽ tìm kiếm tương đối` -> để làm điều này với `Mongodb` chúng ta sẽ sử dụng `Regx` cú pháp sẽ thêm vào là `&fullName=/I'm Admin/i` -> Là thêm phần `&fullName=/{tên_search}/i` nào vào đường link URL -> Tìm kiếm theo điều kiện `$like$` này thì sẽ dễ dàng hơn không làm trải nghiệm người dùng đi xuống.
 
+- Bây giờ cái hàm `FetchUser` của chúng ta sẽ có thêm thằng params là `searchFilter`
+
+- DO Api này là động nên là truyền lên kiểu gì thì filter kiểu đấy
+
 > 26 Bài tập Filter danh sách User
 
 > 27 Api Sorter

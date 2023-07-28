@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Button, Col, Form, Input, Row, theme } from 'antd';
 
-const AdvancedSearchForm = () => {
+const InputSearch = (props) => {
+  const { handleSearch } = props;
   const { token } = theme.useToken();
   const [form] = Form.useForm();
 
@@ -12,7 +13,25 @@ const AdvancedSearchForm = () => {
     padding: 24,
   };
 
+  //  Xử lý searchFilter
+
   const onFinish = (values) => {
+    let query = '';
+    if (values.fullName) {
+      query += `fullName=/${values.fullName}/i`;
+    }
+
+    if (values.email) {
+      query += `email=/${values.email}/i`;
+    }
+
+    if (values.phone) {
+      query += `phone=/${values.phone}/i`;
+    }
+
+    if (query) {
+      handleSearch(query);
+    }
     console.log('Received values of form: ', values);
   };
 
@@ -20,31 +39,19 @@ const AdvancedSearchForm = () => {
     <Form form={form} name="advanced_search" style={formStyle} onFinish={onFinish}>
       <Row gutter={24}>
         <Col span={8}>
-          <Form.Item
-            labelCol={{ span: 24 }} //whole column
-            name={`fullName`}
-            label={`Name`}
-          >
-            <Input placeholder="placeholder" />
+          <Form.Item labelCol={{ span: 24 }} name={`fullName`} label={`Name`}>
+            <Input />
           </Form.Item>
         </Col>
         <Col span={8}>
-          <Form.Item
-            labelCol={{ span: 24 }} //whole column
-            name={`email`}
-            label={`Email`}
-          >
-            <Input placeholder="placeholder" />
+          <Form.Item labelCol={{ span: 24 }} name={`email`} label={`Email`}>
+            <Input />
           </Form.Item>
         </Col>
 
         <Col span={8}>
-          <Form.Item
-            labelCol={{ span: 24 }} //whole column
-            name={`phone`}
-            label={`Số điện thoại`}
-          >
-            <Input placeholder="placeholder" />
+          <Form.Item labelCol={{ span: 24 }} name={`phone`} label={`Số điện thoại`}>
+            <Input />
           </Form.Item>
         </Col>
       </Row>
@@ -77,12 +84,12 @@ const AdvancedSearchForm = () => {
 
 // https://stackblitz.com/run?file=demo.tsx
 // https://ant.design/components/form
-const InputSearch = () => {
-  return (
-    <div>
-      <AdvancedSearchForm />
-    </div>
-  );
-};
+// const InputSearch = (props) => {
+//   return (
+//     <div>
+//       <AdvancedSearchForm />
+//     </div>
+//   );
+// };
 
 export default InputSearch;
