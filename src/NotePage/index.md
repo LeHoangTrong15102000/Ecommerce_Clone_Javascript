@@ -40,9 +40,32 @@
 
 > 23 Api hiển thị danh sách User
 
+- Làm sao để chúng ta biết được rằng cái table có những cái props nào --> Thì đây chính là lúc chúng ta đọc ngược lại mã nguồn -> Đây là câu chuyện thực tế sau này đi làm để có thể sinh tồn được
+
+- Mặc định thằng showSizeChanger nó sẽ là `false` khi mà total > 50 thì nó mới là true, còn `PageSize` chỉ hiển thị khi mà `showSizeChanger` là `true` phải thêm vào bằng `true` để chúng ta mới có thể hiển thị số bản ghi trên 1 trang (là cái dropdown) số lượng bản ghi trên một `page`
+
+- Nên về ý tưởng là mỗi một lần chúng ta onChange thì chúng ta sẽ thay đổi các tham số như `pageSize, current, pages , total(tổng số bản ghi)`(lấy từ BE gửi lên) -> Thay vì chúng ta hard code phần props `pagination` thì chúng ta sẽ truyền động -> Phải có kết quả thì BE mới tiến hành phân trang
+
+-
+
 > 24 Bài tập hiển thị danh sách User
 
+- Mỗi lần phân trang thì chỉ cần thay đổi tham số `current` phần `pageSize` để mặc định là 2
+
+- Trước khi chưa vội nói về phần Api , sẽ đi nói phần hiển thị dữ liệu lên table trước -> Để hiển thị lên được table thì chúng ta cần khai báo phần `columns`
+
+- Bây giờ sẽ tới phần khó hơn, mỗi lần chúng ta chuyển trang thì làm sao nó lấy được dữ liệu mới
+
 > 25 API Filter
+
+- Chúng ta sẽ không viết Api mới cho phần `Filter` vì nó sẽ cực kì lãng phí và không tối ưu hóa -> Thay vào đó chúng ta sẽ truyền thêm vào một vài tham số -> Vẫn là Api lấy danh sách `ListUser` thôi nhưng chúng ta cần truyền thêm các tham số
+
+- Demo với 2 dạng Filter
+
+  ++ Dạng đầu tiên là basic
+  ++ Dạng thứ 2 là theo `Regx`
+
+- Do `query` trên `Url` là so sánh tuyệt đối nếu tên truyền vào không đúng chính xác thì nó sẽ không trả ra kết quả chúng ta không muốn điều đó -> Chúng ta nó muốn nó giống như là toán tử `Like` trong `sql` là `Nó sẽ tìm kiếm tương đối` -> để làm điều này với `Mongodb` chúng ta sẽ sử dụng `Regx` cú pháp sẽ thêm vào là `&fullName=/I'm Admin/i` -> Là thêm phần `&fullName=/{tên_search}/i` nào vào đường link URL -> Tìm kiếm theo điều kiện `$like$` này thì sẽ dễ dàng hơn không làm trải nghiệm người dùng đi xuống.
 
 > 26 Bài tập Filter danh sách User
 
