@@ -1,7 +1,8 @@
 import { InboxOutlined } from '@ant-design/icons';
-import { Upload, Table, message, Modal, Descriptions } from 'antd';
+import { Upload, Table, message, Modal, Descriptions, notification } from 'antd';
 import { useState } from 'react';
 import * as XLSX from 'xlsx';
+import { callCreateMultipleUser } from '../../../../services/api';
 
 const { Dragger } = Upload;
 const UserImport = (props) => {
@@ -45,7 +46,7 @@ const UserImport = (props) => {
               header: ['fullName', 'email', 'phone'], // việc quy định phần header là việc mình quy định các giá trị trong file excel nó cần ứng với thuộc tính nào
               range: 1, //skip header row, bỏ đi cái row header
             });
-            console.log('Check json >>>>', json);
+            // console.log('Check json >>>>', json);
             if (json && json.length > 0) setDataExcel(json);
           };
         }
@@ -59,6 +60,31 @@ const UserImport = (props) => {
     onDrop(e) {
       console.log('Dropped files', e.dataTransfer.files);
     },
+
+    onRemove(e) {},
+  };
+
+  const handleSubmit = async () => {
+    const data = dataExcel.map((item) => {
+      item.password = '123456'; // Tham số này sau này phụ thuộc vào yêu cầu được đặt ra có thể đưa tham số này vào filel `Env` hoặc là chúng ta gọi Api để lấy
+      return item;
+    });
+
+    const res = await callCreateMultipleUser(data);
+    if (res.data) {
+      notification.success({
+        description: `Success ${res.data.countSuccess}, Error: ${res.data.countError}`,
+        message: 'Upload thành công',
+      });
+      setDataExcel([]);
+      setOpenModalImport(false);
+      props.fetchUser();
+    } else {
+      notification.error({
+        description: res.message,
+        message: 'Đã có lỗi xảy ra',
+      });
+    }
   };
   return (
     <>
@@ -66,10 +92,14 @@ const UserImport = (props) => {
         title="Import data user"
         width={'50vw'}
         open={openModalImport}
-        onOk={() => setOpenModalImport(false)}
-        onCancel={() => setOpenModalImport(false)}
+        onOk={() => handleSubmit()}
+        onCancel={() => {
+          setOpenModalImport(false);
+          setDataExcel([]);
+        }}
         okText="Import data"
-        okButtonProps={{ disabled: true }}
+        // okButtonProps là nút cho phép chúng ta import data vào table, có dữ liệu mới cho hiện nút này
+        okButtonProps={{ disabled: dataExcel.length < 1 }}
         // do not close when click outside
         maskClosable={false}
       >

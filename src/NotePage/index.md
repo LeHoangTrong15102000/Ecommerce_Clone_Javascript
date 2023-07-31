@@ -177,7 +177,13 @@
 
 > 33 Bài tập chức năng Import User
 
+- Về yêu cầu mỗi lần chúng ta đóng mở cái `Modal` thì chúng ta cần clear cái data đi và nhấn vào nút `cancel` thì data cũng phải mất đi -> Để có thể sử dụng được chức năng này chúng ta cần sử dụng cái Api `create list users(bulk) /api/v1/user/bulk-create` -> Tuy nhiên rằng đối với `Object` trong api đang được yêu cầu một trường mật khẩu trong khi rằng cái file excel không có trường mật khẩu ở đây -> Thành ra rằng trước khi chúng ta gửi data lên phía server chúng ta cần phải chế biến lại data trong cái `table` của chúng ta rằng chúng ta sẽ thêm cái thuộc tính là `password` -> Chúng ta cố tình làm như vậy để sau này khi chúng ta đặt mật khẩu cố định cho người dùng chúng ta không nên điền vào file excel thay vì vậy chúng ta nên `hardcode` ở trong code
+
+- Chúng ta có handle Việc khi mà `Upload` bản ghi có email trùng thì nó sẽ thông báo cho chúng ta trường hợp này thì Be Nó đã handle điều đó chúng ta rồi, để giảm tải cho Fe nên Be đã xử lý và Fe chỉ hiển thị ra thông báo lỗi
+
 > 34 Download sample file
+
+- Sau này người dùng vào hệ thống của chúng ta người dùng tạo file excel như thế nào thì chúng ta cho phép người dùng down file mẫu về -> Download sample file
 
 > 35 Export To CSV
 

@@ -32,8 +32,9 @@ export const callCreateAUser = (fullName, password, email, phone) => {
 };
 
 // Create Multiple user with excel
-
-export const callCreateMultipleUser = () => {};
+export const callCreateMultipleUser = (dataArray) => {
+  return axios.post('/api/v1/user/bulk-create', dataArray);
+};
 
 // Dùng để xóa User -> Cần truyền lên _id của user
 export const callDeleteUser = (userId) => {
