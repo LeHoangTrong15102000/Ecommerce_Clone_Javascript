@@ -73,19 +73,107 @@
 
 > 26 Bài tập Filter danh sách User
 
+- Todo
+
 > 27 Api Sorter
 
+- Để mà sort dữ liệu thì chúng ta cần điền vào keyword là sort
+
+- Nếu mà sắp xếp theo chiều tăng dần thì chúng ta không cần phải truyền cái gì vào hết , còn nếu muốn sắp xếp theo chiều giảm dần thì chúng ta cần phải thêm dấu trừ phía trước đó là quy định của mongodb
+
+- Sort theo 1 tiêu chí thì nó không có ích lợi gì hết, thông thường đi làm chúng ta thường sắp xếp theo một tiêu chí mà thôi
+
+- Thằng `sort` chúng ta chỉ cần truyền tên trường chúng ta muốn sắp xếp vào là được
+
 > 28 Bài tập Sorter
+
+- Đối với thầng này chúng ta phải làm như nào để không bị conflict với thằng `Filter Search` -> Sao này dùng `antd Pro` thì nó đã `handle` hết cho chúng ta rồi
+
+- Tạo thêm 2 thằng state nữa là `filter` và `sortQuery`
 
 > 29.1 Bài tập chức năng View Detail User
 
 > 29.2 Bài tập Add Avatar
 
+- Để hiển thị cái ảnh sử dụng cú pháp url_backned/images/avatar/image_id_here
+
+- Sử dụng cái component của thằng `antd` là `avatar-antd` -> Đối với thằng avatar này thì cũng chỉ cần điền vào là `src` thì nó sẽ hiển thị cái avatar cho chúng ta
+
+- Đối với thằng vite thì để lấy giá trị của file env thì cú pháp phải là `import.meta.env.{tên_biến}`
+
+- Thằng title trong Component là `Table` thì sau này sử dụng sử dụng `Antd Pro` chúng ta không cần phải khổ sở vì nó nữa => Thì thằng title trong `Table` nó muốn chúng ta trả về cho nó kiểu là `React.ReactNode` -> Sẽ viết một hàm return về `JSX`
+
+- Thằng `antd` màu sắc của nó thiết kế là giành cho doanh nghiệp -> Màu sắc chủ đạo của doanh nghiệp đó -> Chúng ta không nên dùng `backgroundColor` để thay đổi màu sắc cho nó thay vào đó chúng ta nên `change theme` của thằng `antd`
+
 > 30 Bài tập chức năng thêm mới User
+
+- Thêm Modal và khi người dùng click ra ngoài sẽ ngăn chặn cái modal này đóng lại
+
+- Về phần này thì chúng ta sử dụng Api là `POST localhost:8080/api/v1/user` để tạo mới `user`, truyền lên fullName, password, email ,phone
+
+- Về phần Form thì chúng ta sẽ nhúng phần Form vào bên trong body của cái `Modal` -> Nhúng cái Form bởi vì chúng ta muốn cái Form làm nhiệm vụ `validate` dữ liệu cho chúng ta(Phần Header và phần Button thì cái Modal đã có sẵn cho chúng ta) -> Tuy nhiên khi sử dụng thầng `Form` bên trong thằng `Modal` nó nảy sinh vấn đề rất là chi là khó yêu cầu chúng ta cần phải tư duy -> Thông thường chúng nhấn nút submit thì nút submit thường nằm trong cái Form nhưng mà đối với trường hợp này thì nút submit nó lại nằm ở phần `Modal`, thì làm sao chúng ta có thể bắt được sự kiện người dùng submit cái Form -> để làm được điều đấy thì rất chi là may cái `Form` nó cung cấp cho chúng ta `vài cái hook` -> hooks này cho phép chúng ta truy cập vào cái `Form` này -> Cung cấp cái hook tên là `useForm`
+
+- Mỗi lần nhấn nút submit của cái Modal nó sẽ bằng hành động nhất nút submit của cái `Form` nên vì điều đó chúng ta mới có thể control được cái sự kiện submit ở trong `Modal`
 
 > 31 Design Modal Upload (Drag & Drop)
 
+- Làm chức năng Import và Export dữ liệu ra file `csv` -> Các chức năng này khá chi là hay
+
+- Đầu tiên phải design Modal Upload(Drag & Drop) sau đó mới thực hiện chức năng, -> Cách design một phần upload như nào cho đúng
+
+- Bài tập Import User List dùng Api là `POST localhost:8080/api/v1/user/bulk-create(bulk)` giúp tạo mới nhiều người dùng
+
+- Bây giờ thay vì chúng ta thêm mới từng người dùng thì ngta muốn chức năng upload file Excel -> Người ta sẽ nhập danh sách `User` vào `excel` sau đó chúng ta sẽ import vào hệ thống
+
+- Trong thực tế để giải quyết bài toán này sẽ có 2 quy trình, giải pháp về upload file
+  ++ Cách 1
+  +-+ User dùng browser(client) upload file lên website(file raw)
+  +-+ Client gửi file (raw) lên server
+  +-+ Server đọc file (raw) này, convert dữ liệu ra định dạng mong muốn(json)
+  +-+ Server xử lý và lưu dữ liệu vào database
+  +-+ Server trả về kết quả cho client
+  -> Cách làm đầu tiên này thì phía BE phải xử lý khá là nhiều vì phải convert kiểu raw sang json
+
+  ++ Cách 2
+  +-+ User dùng browser(client) upload file lên website(file raw)
+  +-+ Client đọc file upload, convert dữ liệu ra định dạng mong muốn(json) -> Thông thường chúng ta sẽ sử dụng định dạng là `Json`
+  +-+ Client gửi dữ liệu json này lên server(không gửi file raw)
+  +-+ Server đọc dữ liệu json gửi lên, xử lý, lưu dữ liệu vào đatabase
+  +-+ Server trả về kết quả cho Client
+  -> Cách làm này thì người phía FE sẽ phải xử lý khá là nhiều
+
+  -> Nhưng nên biết cả 2 vì sớm mượn gì cũng phải trở thành fullstack dev
+
+-> Trong hướng dẫn này chúng ta sẽ làm cách thứ 2 -> Vì chúng ta đang làm việc với tư cách là một FE developer -> khi đã làm được rồi sau này chúng ta sẽ đẩy về cho phía BE làm
+
+- Quay trở lại giao diện thì chúng ta sẽ có cái `Form` -> Chúng ta có thể click để upload file hoặc là chúng ta có thể kéo thả để upload `File` như vậy thì tính thực tế nó sẽ cao hơn -> Sau khi đã upload File thì chúng ta sẽ đọc file ấy nó sẽ hiển thị ở dưới table
+- Trong Video này chúng ta chỉ desgin giao diện thôi, trong video tiếp theo chúng ta sẽ đọc và ghi giao diện -> Phân tích cấu tạo của một cái `Modal UploadFile` -> Khi mà nhấn vào import thì chúng ta sẽ mở `Modal Import` -> Tiếp theo sẽ là phần upload, upload thành công thì cho hiển thị cái fileUpload ở phía dưới đồng thời có thể xóa nếu cần (khối lượng code như thế này thì thư viện nó đã làm hết cho chúng ta) -> Nhiệm vụ của chúng ta là phải lấy ra được cái output mà thư viện nó nhả ra cho chúng ta thôi -> Khi mà dùng giao diện thấy sướng như vậy thì khách hàng chúng ta họ cũng gật đầu mà thôi
+
+- Để làm phần này thì chúng ta cần sử dụng cái component của thằng `antd` tên là `Upload` -> Cái component này thì độ khó của nó khá chi là cao cho dù độ khó là cao nhưng vẫn muốn giới thiệu tới -> Sau này đi làm thực tế nó sẽ là như vậy nếu mà làm những cái basic quá thì sau này đi làm người ta yêu cầu cao chúng ta sẽ bị ngợp -> Và đây chính là dạng thực tế cực kì cao luôn
+
+- Ở đây đối với component upload này, chúng ta sẽ có cái mẹo nhỏ -> Nhấn Ctrl F rồi tìm tên cực kì nhanh đối với docs của thằng `antd` -> Thằng antd nó khá là tiện lợi, cái component đầu tiên chúng ta cần là `Upload`, component thứ 2 là `Table` để hôm sau chúng ta hiển thị dữ liệu
+
+- Đối với thz `Dragger` props của nó có một thông số là action, cái action này nó muốn là mỗi một lần chúng ta xác nhận `upload` một cái là `File của chúng ta cần phải upload lên server` đường link url trong action là nơi mà file ảnh cần phải truy cập tới hay nói một cách cụ thể mỗi lần chúng ta nhấn nút xác nhận cái ảnh của chúng ta cần phải upload lên server -> Sau khi upload thành công thì chúng ta cần phải trả về trạng thái cho phía client biết là upload thành công hay thất bại -> Nó không phải là một cái component để hiển thị ảnh -> Để giải quyết bài toán của chúng ta chúng ta sẽ sử dụng component này mà không upload file -> Chúng ta chỉ muốn sử dụng giao diện của nó để `đọc file` thôi chứ chúng ta ko muốn upload(không cần phải sử dụng hết tính năng của nó) -> Chúng ta cần phải `customize thằng Antd`
+
+- Chúng ta sử dụng cái component Upload mà không uploadFile thì chúng ta sẽ sử dụng tới cái hàm `customRequest` -> customRequest nó sẽ trả về kiểu `void`
+
+-> Việc chúng ta đọc docs của thằng antd đôi khi là không đủ chi tiết nên đôi khi chúng ta phải đọc ngược lại `source code` -> Đây là cách học và sinh tồn
+
 > 32 Read File Excel
+
+- Trong bài này sẽ học cách `Read file excel` từ bên ngoài truyền vào -> Trước tiên sẽ demo thành quả mà chúng ta đặt được sau khi kết thức cái video này -> Sau khi mà kéo vào trong thì nó sẽ đọc cái dữ liệu trong file excel, sau đó nó phải fill vào trong cái component `Table`
+
+- Trong phần này chúng ta sẽ cái thư viện giúp chúng ta có thể đọc được dữ liệu bên trong file excel -> `yarn add xlsx` -> Phần này chúng ta sẽ tự làm không đi code từ A-Z để cho chúng ta có thể tự làm được
+
+- Sau khi đã cài đặt thành công thư viện `XLSX` vậy câu hỏi đặt ra là làm sau để chúng ta có thể đọc được dữ liệu trong file `Excel` -> Trong đầu chúng ta phải tư duy như thế này, bản chất của vấn đề, từ cái file góc chúng ta phải lấy được data trên từng dòng của `excel` và cái component `Table` nó phải cần dữ liệu dưới dạng `JSON` -> Chúng ta cần phải lên mạng search kết quả, rồi sau đó chúng ta cần phải thử, quá trình đó sẽ phải lập đi lập lại khá nhiều lần(chúng ta phải sai rồi sửa) như vậy chúng ta mới tiến bộ được -> Hầu hết xử lý file đều được viết dưới dạng `callBack` để đảm bảo rằng từng dòng code bên trong sẽ được thực thi, `còn nếu chúng ta viết từng dòng code một thì chưa chắc nó đã được thực thi`
+
+- Bên trong hàm `onLoad` nó sẽ convert định dạng file qua định dạng `Byte(Unit8Array)` -> Sau khi đã convert rồi thì nó sẽ ném cho thư viện `XLXS` của chúng ta để xử lý -> Và sau đó nó lấy ra data `sheet1` và sau cùng là convert từ dạng `sheet` sang `json`
+
+- Vấn đề là chúng ta cần phải lấy ra được cái `file = files[0]` -> Cái giá trị này thì nó nằm ở đoạn onChange của component `Upload` -> Đối với thằng antd khi mà chúng ta upload file thành công thì bên trong thằng `info` của hàm onChange nó đã có `file = files[0]` rồi
+
+- `header: ['fullName', 'email', 'phone']` những cái hàm số này là gì và tại sao chúng ta lại biết tương tự như hôm trước thì chúng ta cần phải đọc ngược lại mã nguồn của thư viện -> Ở đây chúng ta truyền vào cái `options` -> Chúng ta lấy ra header vì chúng ta muốn `output format` cho nó và `range` là chúng ta đang `override worksheet range`
+
+- Trong video tiếp theo sẽ làm chức năng import `User` vào `UserTable`
 
 > 33 Bài tập chức năng Import User
 

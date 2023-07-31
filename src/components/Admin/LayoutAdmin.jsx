@@ -10,7 +10,7 @@ import {
   MenuUnfoldOutlined,
   DownOutlined,
 } from '@ant-design/icons';
-import { Layout, Menu, Dropdown, Space, message } from 'antd';
+import { Layout, Menu, Dropdown, Space, message, Avatar } from 'antd';
 import { Outlet, useNavigate, Link } from 'react-router-dom';
 
 import './layout.scss';
@@ -68,6 +68,8 @@ const LayoutAdmin = () => {
     }
   };
 
+  const urlAvatar = `${import.meta.env.VITE_BACKEND_URL}/images/avatar/${user?.avatar}`;
+
   // sử dụng createAsyncThunk để logout
   // const handleLogout = () => {
   //   dispatch(handleLogoutAction());
@@ -79,6 +81,10 @@ const LayoutAdmin = () => {
     {
       label: <label style={{ cursor: 'pointer' }}>Quản lý tài khoản</label>,
       key: 'account',
+    },
+    {
+      label: <Link to="/">Trang chủ</Link>,
+      key: 'home',
     },
     {
       label: (
@@ -118,6 +124,7 @@ const LayoutAdmin = () => {
           <Dropdown menu={{ items: itemsDropdown }} trigger={['click']}>
             <a onClick={(event) => event.preventDefault()}>
               <Space>
+                <Avatar src={urlAvatar} />
                 Welcome {user?.fullName}
                 <DownOutlined />
               </Space>

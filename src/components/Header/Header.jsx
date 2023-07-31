@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { FaReact } from 'react-icons/fa';
 import { FiShoppingCart } from 'react-icons/fi';
 import { VscSearchFuzzy } from 'react-icons/vsc';
-import { Divider, Badge, Drawer, message, Dropdown, Space } from 'antd';
+import { Divider, Badge, Drawer, message, Dropdown, Space, Avatar } from 'antd';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { DownOutlined } from '@ant-design/icons';
@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router';
 import { callLogout } from '../../services/api';
 import './header.scss';
 import { doLogoutAction } from '../../redux/account/accountSlice';
+import { Link } from 'react-router-dom';
 
 const Header = () => {
   const [openDrawer, setOpenDrawer] = useState(false);
@@ -31,7 +32,7 @@ const Header = () => {
 
   const hanndleLoginAction = async () => {};
 
-  const items = [
+  let items = [
     {
       label: <label style={{ cursor: 'pointer' }}>Quản lý tài khoản</label>,
       key: 'account',
@@ -45,6 +46,17 @@ const Header = () => {
       key: 'logout',
     },
   ];
+
+  if (user?.role === 'ADMIN') {
+    items.unshift({
+      label: <Link to="/admin">Trang quản trị</Link>,
+      key: 'admin',
+    });
+  }
+
+  // lấy ra cái avatar cho người dùng
+  const urlAvatar = `${import.meta.env.VITE_BACKEND_URL}/images/avatar/${user?.avatar}`;
+
   return (
     <>
       <div className="header-container">
@@ -89,12 +101,11 @@ const Header = () => {
                   <span onClick={() => navigate('/login')}> Tài Khoản</span>
                 ) : (
                   <Dropdown menu={{ items }} trigger={['click']}>
-                    <a onClick={(e) => e.preventDefault()}>
-                      <Space>
-                        Welcome {user?.fullName}
-                        <DownOutlined />
-                      </Space>
-                    </a>
+                    <Space>
+                      <Avatar src={urlAvatar} />
+                      {user?.fullName}
+                      {/* <DownOutlined /> */}
+                    </Space>
                   </Dropdown>
                 )}
               </li>

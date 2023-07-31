@@ -1,5 +1,5 @@
-import InputSearch from './../../components/Admin/UserTable/InputSearch';
-import UserTable from './../../components/Admin/UserTable/UserTable';
+// import InputSearch from './../../components/Admin/UserTable/InputSearch';
+import UserTable from './../../components/Admin/User/UserTable';
 
 const AdminPage = () => {
   return (

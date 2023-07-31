@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button, Col, Form, Input, Row, theme } from 'antd';
 
 const InputSearch = (props) => {
-  const { handleSearch } = props;
+  const { handleSearch, setFilter } = props;
   const { token } = theme.useToken();
   const [form] = Form.useForm();
 
@@ -57,13 +57,14 @@ const InputSearch = (props) => {
       </Row>
       <Row>
         <Col span={24} style={{ textAlign: 'right' }}>
-          <Button type="primary" htmlType="submit">
+          <Button type="primary" htmlType="submit" style={{ backgroundColor: '#1677ff' }}>
             Search
           </Button>
           <Button
             style={{ margin: '0 8px' }}
             onClick={() => {
               form.resetFields();
+              setFilter(''); //
             }}
           >
             Clear
