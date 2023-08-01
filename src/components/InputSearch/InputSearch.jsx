@@ -15,18 +15,18 @@ const InputSearch = (props) => {
 
   //  Xử lý searchFilter
 
-  const onFinish = (values) => {
+  const handleFinish = (values) => {
     let query = '';
     if (values.fullName) {
-      query += `fullName=/${values.fullName}/i`;
+      query += `${nameObject.field_1}=/${values.fullName}/i`;
     }
 
     if (values.email) {
-      query += `email=/${values.email}/i`;
+      query += `${nameObject.field_2}=/${values.email}/i`;
     }
 
     if (values.phone) {
-      query += `phone=/${values.phone}/i`;
+      query += `${nameObject.field_3}=/${values.phone}/i`;
     }
 
     if (query) {
@@ -36,13 +36,13 @@ const InputSearch = (props) => {
   };
 
   return (
-    <Form form={form} name="advanced_search" style={formStyle} onFinish={onFinish}>
+    <Form form={form} name="advanced_search" style={formStyle} onFinish={handleFinish}>
       <Row gutter={24}>
         <Col span={8}>
           <Form.Item
             labelCol={{ span: 24 }}
-            name={nameObject.fullName}
-            label={labelObject.fullName}
+            name={nameObject.field_1}
+            label={labelObject.field_1}
           >
             <Input />
           </Form.Item>
@@ -50,8 +50,8 @@ const InputSearch = (props) => {
         <Col span={8}>
           <Form.Item
             labelCol={{ span: 24 }}
-            name={nameObject.email}
-            label={labelObject.email}
+            name={nameObject.field_2}
+            label={labelObject.field_2}
           >
             <Input />
           </Form.Item>
@@ -60,8 +60,8 @@ const InputSearch = (props) => {
         <Col span={8}>
           <Form.Item
             labelCol={{ span: 24 }}
-            name={nameObject.phone}
-            label={labelObject.phone}
+            name={nameObject.field_3}
+            label={labelObject.field_3}
           >
             <Input />
           </Form.Item>

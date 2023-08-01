@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import Book from './pages/book';
+import Book from './pages/Admin/Book/Book';
 import Contact from './pages/contact';
 import Login from './pages/Login/Login';
 import { Outlet } from 'react-router-dom';

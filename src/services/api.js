@@ -33,7 +33,7 @@ export const callCreateAUser = (fullName, password, email, phone) => {
 
 // Create Multiple user with excel
 export const callCreateMultipleUser = (dataArray) => {
-  return axios.post('/api/v1/user/bulk-create', dataArray); 
+  return axios.post('/api/v1/user/bulk-create', dataArray);
 };
 
 // Dùng để xóa User -> Cần truyền lên _id của user
@@ -47,5 +47,11 @@ export const callUpdateUser = (_id, fullName, phone) => {
 };
 
 //
+export const callFetchListBook = (query) => {
+  return axios.get(`/api/v1/book?${query}`);
+};
 
-//
+// Create a book
+export const callCreateABook = () => {
+  return axios.post('/api/v1/book', {});
+};

@@ -43,15 +43,15 @@ const UserTable = () => {
   const [dataUpdate, setDataUpdate] = useState(null);
 
   const userObject = {
-    fullName: 'fullName',
-    email: 'email',
-    phone: 'phone',
+    field_1: 'fullName',
+    field_2: 'email',
+    field_3: 'phone',
   };
 
   const userLabel = {
-    fullName: 'Name',
-    email: 'Email',
-    phone: 'Số điện thoại',
+    field_1: 'Name',
+    field_2: 'Email',
+    field_3: 'Số điện thoại',
   };
 
   // Khi mà current và pageSize thay đổi thì useEffect() sẽ chạy lại
@@ -133,6 +133,7 @@ const UserTable = () => {
     },
     {
       title: 'Action',
+      width: 150,
       render: (text, record, index) => {
         // để biết text record index là gì thì clg là chúng ta se biết được
         return (
@@ -209,7 +210,7 @@ const UserTable = () => {
 
     if (pagination && pagination.pageSize !== pageSize) {
       setPageSize(pagination.pageSize);
-      // setCurrent(1);
+      setCurrent(1);
     }
 
     if (sorter && sorter.field) {
