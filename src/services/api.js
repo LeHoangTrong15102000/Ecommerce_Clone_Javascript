@@ -33,10 +33,19 @@ export const callCreateAUser = (fullName, password, email, phone) => {
 
 // Create Multiple user with excel
 export const callCreateMultipleUser = (dataArray) => {
-  return axios.post('/api/v1/user/bulk-create', dataArray);
+  return axios.post('/api/v1/user/bulk-create', dataArray); 
 };
 
 // Dùng để xóa User -> Cần truyền lên _id của user
 export const callDeleteUser = (userId) => {
   return axios.delete(`/api/v1/user/${userId}`);
 };
+
+// Update user -> truyền lên một cái body mới, chỉ đươc cập nhật fullName và phone
+export const callUpdateUser = (_id, fullName, phone) => {
+  return axios.put('/api/v1/user', { _id, fullName, phone });
+};
+
+//
+
+//

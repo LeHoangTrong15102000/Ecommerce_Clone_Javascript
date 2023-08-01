@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Table, Row, Col, Popconfirm, notification, message, Button } from 'antd';
-import InputSearch from './InputSearch';
+// import InputSearch from './InputSearch';
+import InputSearch from '../../InputSearch/InputSearch';
 import { callDeleteUser, callFetchListUser } from '../../../services/api';
 import {
   CloudUploadOutlined,
   DeleteTwoTone,
+  EditTwoTone,
   ExportOutlined,
   PlusOutlined,
   ReloadOutlined,
@@ -13,6 +15,8 @@ import UserModalCreate from './UserModalCreate';
 import UserViewDetail from './UserViewDetail';
 import moment from 'moment';
 import UserImport from './data/UserImport';
+import * as XLSX from 'xlsx';
+import UserModalUpdate from './UserModalUpdate';
 
 // https://stackblitz.com/run?file=demo.tsx
 const UserTable = () => {
@@ -34,6 +38,21 @@ const UserTable = () => {
   const [openModalCreate, setOpenModalCreate] = useState(false);
 
   const [openModalImport, setOpenModalImport] = useState(false);
+
+  const [openModalUpdate, setOpenModalUpdate] = useState(false);
+  const [dataUpdate, setDataUpdate] = useState(null);
+
+  const userObject = {
+    fullName: 'fullName',
+    email: 'email',
+    phone: 'phone',
+  };
+
+  const userLabel = {
+    fullName: 'Name',
+    email: 'Email',
+    phone: 'Số điện thoại',
+  };
 
   // Khi mà current và pageSize thay đổi thì useEffect() sẽ chạy lại
   useEffect(() => {
@@ -126,10 +145,21 @@ const UserTable = () => {
               okText={'Xác nhận'}
               cancelText="Hủy"
             >
-              <span style={{ cursor: 'pointer' }}>
+              <span style={{ cursor: 'pointer', margin: '0 20px' }}>
                 <DeleteTwoTone twoToneColor="#ff4d4f" />
               </span>
             </Popconfirm>
+
+            {/* Hiển thị Update user */}
+            <EditTwoTone
+              twoToneColor="#f57800"
+              style={{ cursor: 'pointer' }}
+              onClick={() => {
+                setOpenModalUpdate(true);
+                // Nó sẽ lấy thông tin của người dùng đó gán vào dataUpdate
+                setDataUpdate(record);
+              }}
+            />
           </>
         );
       },
@@ -213,6 +243,7 @@ const UserTable = () => {
             style={{ backgroundColor: '#1677ff' }}
             icon={<ExportOutlined />}
             type="primary"
+            onClick={() => handleExportUser()}
           >
             Export
           </Button>
@@ -253,11 +284,26 @@ const UserTable = () => {
     setFilter(query);
   };
 
+  // Func Export User
+  const handleExportUser = () => {
+    if (listUser.length > 0) {
+      const worksheet = XLSX.utils.json_to_sheet(listUser); // chuyển từ json sang sheet
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1'); // đặt tên sheet và thêm sheet đó vào book_append_sheet
+      XLSX.writeFile(workbook, 'ExportUser.csv'); // Sau đó viết ra file sheet
+    }
+  };
+
   return (
     <>
       <Row gutter={[20, 20]}>
         <Col span={24}>
-          <InputSearch handleSearch={handleSearch} setFilter={setFilter} />
+          <InputSearch
+            handleSearch={handleSearch}
+            setFilter={setFilter}
+            nameObject={userObject}
+            labelObject={userLabel}
+          />
         </Col>
 
         <Col span={24}>
@@ -302,6 +348,14 @@ const UserTable = () => {
       <UserImport
         openModalImport={openModalImport}
         setOpenModalImport={setOpenModalImport}
+        fetchUser={fetchUser}
+      />
+
+      <UserModalUpdate
+        openModalUpdate={openModalUpdate}
+        setOpenModalUpdate={setOpenModalUpdate}
+        dataUpdate={dataUpdate}
+        setDataUpdate={setDataUpdate}
         fetchUser={fetchUser}
       />
     </>

@@ -45,7 +45,7 @@ const items = [
     icon: <ExceptionOutlined />,
   },
   {
-    lalel: <Link to="/admin/order">Manage Orders</Link>,
+    label: <Link to="/admin/order">Manage Orders</Link>,
     key: 'order',
     icon: <DollarCircleOutlined />,
   },

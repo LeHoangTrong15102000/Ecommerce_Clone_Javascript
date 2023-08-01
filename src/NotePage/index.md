@@ -185,78 +185,47 @@
 
 - Sau này người dùng vào hệ thống của chúng ta người dùng tạo file excel như thế nào thì chúng ta cho phép người dùng down file mẫu về -> Download sample file
 
+- Tiến hành download sample file thôi -> Trong khi người dùng lần đầu vào trang của chúng ta mà người dùng không biết `upload file gì` thì người dùng có thể download file mẫu của chúng ta -> Để làm được điều đấy thì chúng ta cần google với keyword là `js download file` -> Khi chúng ta dùng với thằng này thì có một cách rất chi là nhanh thì chính là việc chúng ta sẽ dùng một cái `thẻ a` nó sẽ cần phải có 2 thuộc tính, `thuộc tính đầu tiên là file mà chúng ta cần download`, `thuộc tính thứ 2 chính là keyword download` nhờ có 2 thuộc tính này mà chúng ta `có thể download được file` -> Dẫu biết rằng là có rất nhiều cách nhưng `chúng ta sẽ sử dụng cách này cho nó đơn giản` -> Nhưng mà đối với thằng Vite thì chúng ta sẽ có một vài vấn đề phát sinh, đó là lí do chuẩn ta cần phải giải quyết vấn đề đấy
+
+- cái đường Link này không phải là cái đường link đâu mà là chúng ta lưu sẵn file excel trong source code, điều thứ 2 để cho thằng Vite có thể đọc được cái file của chúng ta -> thì chúng ta cần phải `Import nó 1 cách hơi dị`, chúng ta cần phải cấu hình thằng Vite và một cái mẹo để cấu hình là chúng ta thêm `?url` vào sau đuôi cho đường dẫn của nó như sau `./data.xlxs?url` -> Dùng `onClick={(e) => e.stopPropagation()` ngăn chặn sự kiện nổi bọt lên thằng cha
+  -> Đối với thàng Vite những đường `Link không phải là file ảnh` thì chúng ta cần thêm `dấu chấm hỏi` vào ví dụ như download 1 file: `?url` -> Mặc đinh thằng Vite là nó chỉ có thể download ảnh và trong config của thằng Vite mặc định thuộc tính `assetsInclude: ['**/*.gltf']` nó là file ảnh -> Để đơn giản hơn thì chúng ta sử dụng luôn `?url` không cần config
+
 > 35 Export To CSV
+
+- Chúng ta chọn CSV là định dạng để export file, các giá trị trong file CSV sẽ được ngăn cách nhau bởi dấu `,` -> Mặc đinh microsoft excel nó đã support định dạng file `CSV` rồi
+
+- Sử dụng file Excel để lưu trữ data phức tạp, còn sử dụng file CSV nếu như chúng ta muốn sử dụng cái data ấy ở nhiều nơi -> Các database nó chỉ hỗ trợ chúng ta dưới dạng CSV, chứ nó không hỗ trợ chúng ta dưới dạng excel, máy móc thì nó thích dữ liệu cách nhau bởi `dấu phẩy hơn` hơn là fileExcel với các `Binary(hệ nhị phân)`
 
 > 36 Bài tập chức năng Export User
 
+- Xuất cái file `UserList` và định dạng chúng ta mong muốn là `CSV` -> Bây giờ chúng ta sẽ xuất ra giá trị trên `UserTable` của chúng ta -> Logic ở đấy là khi mà chúng ta nhấn vào nút Export chúng ta sẽ xuất ra file `CSV` ở từng trang trên `UserTable` -> Và lưu ý rằng chúng ta chỉ nên xuất ít người dùng thôi -> Đối với các hệ thống lớn thì chúng ta không nên làm như vậy chúng ta cần có cơ chế riêng để xuất data -> Đối với dữ liệu lớn thì chúng ta không nên làm ở phía `client` thay vì vậy server xử lý thì nó sẽ hiệu quả hơn -> chính vì lí do đó vì sao chúng ta chỉ nên xuất data đang hiển thị trên cái `UserTable` thôi
+
+- Bây giờ có một câu hỏi là sao chúng ta có thể export được, một điều khá chi là hay của thư viện `XLSX` khi mà chúng ta muốn download dưới dạng `excel` hay `csv` thì nó đều hỗ trợ hết
+- Chúng ta sẽ sử dụng lại `UserList` của cái `UserTable` để export dữ liệu
+
 > 37 Bài tập chức năng Update User
+
+- Chúng ta sẽ thực hiện chức năng `Update User` -> Đối ới chức năng sửa này chúng ta chỉ cho phép người dùng sửa field `fullName` và `phone` còn trường email không cho phép người dùng sửa -> Phần email chúng ta sẽ disable nó lại
+- Khi mà nhấn vào nút sửa thì chúng ta sẽ cho nó hiện lên cái `Modal`
+
+- Tuy nhiên nó có một điểm khó là việc chúng ta phải fill dữ liệu của người dùng vào cái `form ModalUpdate`, và cái kiếm điểm khó thứ 2 là đối với cái Api `Update` chúng ta cần phải truyền lên cái trường là `_id` -> Chúng ta thấy rằng trên cái `Form` không có trường `_id` làm sao chúng ta có thể truyền lên được
+  ++ Câu hỏi đầu tiên làm sao chúng ta có thể gán ngược lại giá trị user cho `Form`
+  ++ Câu hỏi thứ 2 làm sao chúng ta có thể lấy được `_id` bản ghi mà chúng ta đang sửa
+
+- Với câu hỏi đâu tiên để gán được giá trị của user lên form chúng ta sử dụng cái hàm của `form antd` đó là `form.setFieldsValue(dataUpdate)` -> Hàm `setFieldsValue` là gán giá trị cho tất các trường, còn hàm `setFieldValue` là gán giá trị cho một trường -> Cái data chúng ta truyền vào hàm `setFieldsValue(dataUpdate)` nó còn phải có những cái thuộc tính trùng với `name` của `form`
+
+- Sẽ có hướng fill `Data` theo dạng nâng cao sao này đi làm chúng ta sẽ gặp tới -> Thông tin bên trong tài liệu (không khuyến khích làm theo cách này) -> Cái level thứ 2 là chúng ta click và sửa trực tiếp trên cái `table` của chúng ta luôn -> Cái level này bên `antd pro` nó đã làm sẵn cho chúng ta hết rồi khá là amazing
+
+- Khi nhấn vào cây bút chì để thay đổi thì `dataUpdate` phải có được data của user
+
+-
 
 > 38 Bài tập chức năng Delete User
 
+- Xóa user cần truyền vào `_id` user cần xóa lên cho BE -> Hoàn thành chức năng xóa người dùng
+
 > 39 Ôn tập các kiến thức đã học
 
-## Module Books
+- Tập thối quen đọc docs, đọc ngươc lại source code -> Đây là kĩ năng sinh tồn khi đi làm của chúng ta , và khi đi làm mức độ nó còn khó hơn là trong lúc thực hành nữa nên là khi mà còn đang học thì hãy va đập nhiều vào
 
-> 40 Bài tập hiển thị /Filter / Sort Books
-
-> 41 Bài tập design chức năng xem chi tiết Book
-
-> 42 Hoàn thiện chức năng xem cho tiết Book
-
-> 43 Design Form Add New Book
-
-> 44 Bài tập Uplaod File
-
-> 45 Bài tập Create a new book
-
-> 46 Bài tập Design form update hook
-
-> 47 Bài tập Update a hook
-
-> 48 Bài tập Delete a hook
-
-> 49 Ôn tập các kiến thức đã học
-
-> 50 Bài tập design giao diện client(homepage)
-
-> 51 Hiểm thị home page
-
-> 52 Bài tập Filter/Sorter
-
-> 53 Url với Params/Query
-
-> 54 Bài tập Design View Detail Page
-
-> 55 Chức năng View Detail Book
-
-> 56 Thêm Loading Skeleton
-
-> 57 Hoàn thiện view detail page
-
-> 58 Quá trình xây dựng giao diện
-
-## Module Orders
-
-> 59 setup redux persist
-
-> 60 Bài tập Add/Remove Product
-
-> 61 Bài tập hiển thị số lượng giỏ hàng
-
-> 62 Design Preview Cart
-
-> 63 Design Base order Page
-
-> 64 Bài tập order page
-
-> 65 Bài tập Payment page
-
-> 66 Api Create An Order
-
-> 67 Bài tập View Order History
-
-> 68 Bài tập Update Current User
-
-> 69 Bài tập Display Order Page + Api Dashboard
-
-> 70 Các bug còn tồn đọng
+-> Hoàn thành `module User` cho phần Admin page

@@ -3,6 +3,7 @@ import { Upload, Table, message, Modal, Descriptions, notification } from 'antd'
 import { useState } from 'react';
 import * as XLSX from 'xlsx';
 import { callCreateMultipleUser } from '../../../../services/api';
+import templateFile from './data.xlsx?url';
 
 const { Dragger } = Upload;
 const UserImport = (props) => {
@@ -24,6 +25,7 @@ const UserImport = (props) => {
     accept:
       '.csv,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     customRequest: dummyRequest,
+    showUploadList: dataExcel.length > 0 ? true : false, // khi mà có dữ liệu thì mới cho hiển thị thanh progress bar
     onChange(info) {
       // console.log('Check info >>>>', info);
       const { status } = info.file;
@@ -61,7 +63,7 @@ const UserImport = (props) => {
       console.log('Dropped files', e.dataTransfer.files);
     },
 
-    onRemove(e) {},
+    onRemove(info) {},
   };
 
   const handleSubmit = async () => {
@@ -86,6 +88,7 @@ const UserImport = (props) => {
       });
     }
   };
+
   return (
     <>
       <Modal
@@ -109,7 +112,11 @@ const UserImport = (props) => {
           </p>
           <p className="ant-upload-text">Click or drag file to this area to upload</p>
           <p className="ant-upload-hint">
-            Support for a single upload. Only accept .csv .xls .xlsx
+            Support for a single upload. Only accept .csv .xls .xlsx . or{' '}
+            {/*  cái đường Link này không phải là cái đường link đâu mà là chúng ta lưu sẵn file excel trong source code */}
+            <a onClick={(e) => e.stopPropagation()} download href={templateFile}>
+              Download Sample File
+            </a>
           </p>
         </Dragger>
 
