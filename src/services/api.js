@@ -52,10 +52,20 @@ export const callFetchListBook = (query) => {
 };
 
 // Create a book
-export const callCreateABook = () => {
+export const callCreateABook = (mainText, author, price) => {
   return axios.post('/api/v1/book', {});
 };
 
 export const callDeleteBook = (bookId) => {
   return axios.delete(`/api/v1/book/${bookId}`);
+};
+
+// FetchCategory
+export const callFetchCategory = () => {
+  return axios.get('/api/v1/category');
+};
+
+// call Upload book img
+export const callUploadBookImg = () => {
+  return axios.post('/api/v1/book');
 };

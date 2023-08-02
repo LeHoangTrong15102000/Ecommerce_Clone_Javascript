@@ -21,6 +21,10 @@
 
 > 43 Design Form Add New Book
 
+- Về ảnh Thumbnail chúng ta chỉ cho phép upload một ảnh duy nhất thôi, còn bên slider thì chúng ta mới cho phép upload nhiều ảnh
+
+- Về phần thêm book này chúng ta sẽ tự làm -> để nâng cao kĩ năng thôi không còn cách nào khác để có thể nâng cao kĩ năng lúc này bằng cách luyện tập cường độ cao rồi
+
 > 44 Bài tập Uplaod File
 
 > 45 Bài tập Create a new book
