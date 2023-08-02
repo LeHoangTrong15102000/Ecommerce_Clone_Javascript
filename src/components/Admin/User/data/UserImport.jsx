@@ -26,6 +26,7 @@ const UserImport = (props) => {
       '.csv,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     customRequest: dummyRequest,
     showUploadList: dataExcel.length > 0 ? true : false, // khi mà có dữ liệu thì mới cho hiển thị thanh progress bar
+    // showUploadList: {{ showRemoveIcon: false }},
     onChange(info) {
       // console.log('Check info >>>>', info);
       const { status } = info.file;

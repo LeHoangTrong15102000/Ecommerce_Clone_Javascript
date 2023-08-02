@@ -1,13 +1,23 @@
-# Tiếp tục với 
-
+# Tiếp tục với
 
 ## Module Books
 
 > 40 Bài tập hiển thị /Filter / Sort Books
 
+- Nếu chúng ta muốn sách nào mới thì chúng ta cho lên đầu thì mặc định sortQuery chúng ta sẽ để giá trị của nó là `sort=-updatedAt` thì những sách mới nó sẽ cho lên đầu tiên
+
 > 41 Bài tập design chức năng xem chi tiết Book
 
+- Đối với phần ảnh hiển thị cho sách chúng ta sử dụng component `Upload` của antd -> Khi mà chúng ta xem chi tiết thì chúng ta chỉ cần xem là được -> Còn sau này chức năng `thêm mới quyển sách` hoặc là `update quyển sách đó` thì chúng ta mới cho phép xem và xóa tấm ảnh của sách trong component `Upload` -> Còn bây giờ chúng ta phải học cách customize để cho nó có chức năng view thôi không có chức năng xóa
+
 > 42 Hoàn thiện chức năng xem cho tiết Book
+
+- Hiển thị động 4 ảnh khác nhau từ BE trả về -> hiển thị và hoàn thành giao diện cho phần `Xem chi tiết sản phẩm`
+
+- Khi mà BE trả về dữ liệu thì hình ảnh chính diện của quyển sách chinh là `thumbnail` của nó
+- `Slider` là phần chúng ta có thể scroll đi để xem chi tiết tổng quản của một sản phẩm -> Ý tưởng của chúng ta là ảnh đầu tiên sẽ là `thumbnail` các ảnh tiếp theo sẽ là ảnh trong mảng `slider` của chúng ta
+
+- Cái ảnh `thumbnail` chính là ảnh đầu tiên của `slider` -> Nhưng mà do ở BE chúng ta đã tách ra để tạo độ khó
 
 > 43 Design Form Add New Book
 

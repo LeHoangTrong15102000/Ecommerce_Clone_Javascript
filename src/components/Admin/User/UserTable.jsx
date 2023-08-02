@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Table, Row, Col, Popconfirm, notification, message, Button } from 'antd';
-// import InputSearch from './InputSearch';
-import InputSearch from '../../InputSearch/InputSearch';
+import InputSearch from './InputSearch';
+// import InputSearch from '../../InputSearch/InputSearch';
 import { callDeleteUser, callFetchListUser } from '../../../services/api';
 import {
   CloudUploadOutlined,
@@ -41,18 +41,6 @@ const UserTable = () => {
 
   const [openModalUpdate, setOpenModalUpdate] = useState(false);
   const [dataUpdate, setDataUpdate] = useState(null);
-
-  const userObject = {
-    field_1: 'fullName',
-    field_2: 'email',
-    field_3: 'phone',
-  };
-
-  const userLabel = {
-    field_1: 'Name',
-    field_2: 'Email',
-    field_3: 'Số điện thoại',
-  };
 
   // Khi mà current và pageSize thay đổi thì useEffect() sẽ chạy lại
   useEffect(() => {
@@ -299,12 +287,7 @@ const UserTable = () => {
     <>
       <Row gutter={[20, 20]}>
         <Col span={24}>
-          <InputSearch
-            handleSearch={handleSearch}
-            setFilter={setFilter}
-            nameObject={userObject}
-            labelObject={userLabel}
-          />
+          <InputSearch handleSearch={handleSearch} setFilter={setFilter} />
         </Col>
 
         <Col span={24}>

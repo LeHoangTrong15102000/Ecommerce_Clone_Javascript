@@ -55,3 +55,7 @@ export const callFetchListBook = (query) => {
 export const callCreateABook = () => {
   return axios.post('/api/v1/book', {});
 };
+
+export const callDeleteBook = (bookId) => {
+  return axios.delete(`/api/v1/book/${bookId}`);
+};

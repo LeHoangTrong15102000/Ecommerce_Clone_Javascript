@@ -1,5 +1,5 @@
-import { Button, Col, Form, Popconfirm, Row, Table } from 'antd';
-import InputSearch from '../../InputSearch/InputSearch';
+import { Button, Col, Form, Popconfirm, Row, Table, message, notification } from 'antd';
+// import InputSearch from '../../InputSearch/InputSearch';
 import { useEffect, useState } from 'react';
 import BookModalCreate from './BookModalCreate';
 import BookModalUpdate from './BookModalUpdate';
@@ -12,8 +12,9 @@ import {
   PlusOutlined,
   ReloadOutlined,
 } from '@ant-design/icons';
-import { callFetchListBook } from '../../../services/api';
+import { callDeleteBook, callFetchListBook } from '../../../services/api';
 import moment from 'moment';
+import InputSearch from './InputSearch';
 
 const BookTable = (props) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -24,22 +25,25 @@ const BookTable = (props) => {
   const [total, setTotal] = useState(0); // tham số này để biết được chúng ta cần có bao nhiêu trang
   const [filter, setFilter] = useState('');
 
-  const [sortQuery, setSortQuery] = useState('');
+  const [sortQuery, setSortQuery] = useState('sort=-updatedAt'); // Nếu mà '' thì nó sẽ lấy theo thứ tự tăng dần (từ A - Z)
 
   const [dataViewDetail, setDataViewDetail] = useState(null);
   const [openViewDetail, setOpenViewDetail] = useState(false);
 
-  const bookObject = {
-    field_1: '',
-    field_2: '',
-    field_3: '',
-  };
+  const [openModalCreate, setOpenModalCreate] = useState(false);
+  const [openModalUpdate, setOpenModalUpdate] = useState(false);
 
-  const bookLabel = {
-    field_1: 'Tên sách',
-    field_2: 'Tác giả',
-    field_3: 'Thể loại',
-  };
+  // const bookObject = {
+  //   field_1: 'mainText',
+  //   field_2: 'author',
+  //   field_3: 'category',
+  // };
+
+  // const bookLabel = {
+  //   field_1: 'Tên sách',
+  //   field_2: 'Tác giả',
+  //   field_3: 'Thể loại',
+  // };
 
   const columns = [
     {
@@ -51,7 +55,7 @@ const BookTable = (props) => {
           <a
             href="#"
             onClick={() => {
-              setDataViewDetail(record);
+              setDataViewDetail(record); //  gán data cho dataViewDetail
               setOpenViewDetail(true);
             }}
           >
@@ -82,27 +86,40 @@ const BookTable = (props) => {
       render: (text, record, index) => {
         return (
           <>
-            <span>{moment(record.createdAt).format('DD/MM/YYYY HH:mm:ss')}</span>
+            <span>
+              {' '}
+              {new Intl.NumberFormat('vi-VN', {
+                style: 'currency',
+                currency: 'VND',
+              }).format(record?.price ?? 0)}{' '}
+            </span>
           </>
         );
       },
     },
     {
       title: 'Ngày cập nhật',
-      dataIndex: 'updatedAt',
+      dataIndex: 'createdAt ',
       sorter: true,
+      render: (text, record, index) => {
+        return (
+          <>
+            <span>{moment(record.createdAt).format('DD/MM/YYYY HH:mm:ss')}</span>
+          </>
+        );
+      },
     },
     {
       title: 'Action',
       width: 150,
-      render: (text, recored, index) => {
+      render: (text, record, index) => {
         return (
           <>
             <Popconfirm
               placement="leftTop"
               title={'Xác nhận xóa user'}
               description={'Bạn có chắc muốn xóa user này'}
-              onConfirm={() => handleDeleteUser(record._id)}
+              onConfirm={() => handleDeleteBook(record._id)}
               okText={'Xác nhận'}
               cancelText="Hủy"
             >
@@ -216,9 +233,22 @@ const BookTable = (props) => {
     );
   };
 
-  const handleDeleteBook = () => {};
+  const handleDeleteBook = async (bookId) => {
+    const res = await callDeleteBook(bookId);
+    if (res && res.data) {
+      message.success('Xóa book thành công!');
+      fetchBook();
+    } else {
+      notification.error({
+        message: 'Có lỗi xảy ra',
+        description: res.message,
+      });
+    }
+  };
 
-  const handleSearch = () => {};
+  const handleSearch = (query) => {
+    setFilter(query);
+  };
 
   const handleExportBook = () => {};
 
@@ -226,12 +256,7 @@ const BookTable = (props) => {
     <>
       <Row gutter={[20, 20]}>
         <Col span={24}>
-          <InputSearch
-            handleSearch={handleSearch}
-            setFilter={setFilter}
-            nameObject={bookObject}
-            labelObject={bookLabel}
-          />
+          <InputSearch handleSearch={handleSearch} setFilter={setFilter} />
         </Col>
 
         <Col span={24}>
@@ -260,11 +285,24 @@ const BookTable = (props) => {
         </Col>
       </Row>
 
-      <BookModalCreate />
+      <BookViewDetail
+        openViewDetail={openViewDetail}
+        setOpenViewDetail={setOpenViewDetail}
+        dataViewDetail={dataViewDetail}
+        setDataViewDetail={setDataViewDetail}
+      />
 
-      <BookViewDetail />
+      <BookModalCreate
+        openModalCreate={openModalCreate}
+        setOpenModalCreate={setOpenModalCreate}
+        fetchBook={fetchBook}
+      />
 
-      <BookModalUpdate />
+      <BookModalUpdate
+        openModalUpdate={openModalUpdate}
+        setOpenModalUpdate={setOpenModalUpdate}
+        fetchBook={fetchBook}
+      />
     </>
   );
 };
