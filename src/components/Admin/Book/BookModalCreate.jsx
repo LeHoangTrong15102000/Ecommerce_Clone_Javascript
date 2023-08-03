@@ -9,6 +9,7 @@ import {
   Select,
   Upload,
   message,
+  notification,
 } from 'antd';
 import { useEffect, useState } from 'react';
 import Loading from './../../Loading/index';
@@ -22,6 +23,7 @@ import {
 const BookModalCreate = (props) => {
   const { openModalCreate, setOpenModalCreate } = props;
 
+  // setState định nghĩa tên function dùng cho việc update state
   const [isSubmit, setIsSubmit] = useState(false);
 
   const [listCategory, setListCategory] = useState([]);
@@ -32,6 +34,7 @@ const BookModalCreate = (props) => {
 
   const [imageUrl, setImageUrl] = useState('');
 
+  // lấy ra phần tử dataThumbnail[0].name -> lấy ra tên
   const [dataThumbnail, setDataThumbnail] = useState([]);
   const [dataSlider, setDataSlider] = useState([]);
 
@@ -51,17 +54,48 @@ const BookModalCreate = (props) => {
         setListCategory(dataCategory);
       }
     };
+    // Fetch category lần đầu tiên khi mà component được mouse
     fetchCategory();
   }, []);
 
   const handleFinish = async (values) => {
-    const { fullName, password, email, phone } = values;
+    if (dataThumbnail.length === 0) {
+      notification.error({
+        message: 'Lỗi validate',
+        description: 'Vui lòng upload ảnh thumbnail',
+      });
+      return;
+    }
+
+    if (dataSlider.length === 0) {
+      notification.error({
+        message: 'Lỗi validate',
+        description: 'Vui lòng upload ảnh slider',
+      });
+      return;
+    }
+    const { mainText, author, category, price, sold, quantity } = values;
+    const thumbnail = dataThumbnail[0].name; // nhận vào chuỗi string
+    const slider = dataSlider.map((item) => item.name); // nhận vào mảng các chuỗi string
+    //  data của thumbnail và slider thì state của React sẽ truyền vào
     setIsSubmit(true);
-    const res = await callCreateABook(fullName, password, email, phone);
+
+    const res = await callCreateABook(
+      thumbnail,
+      slider,
+      mainText,
+      author,
+      price,
+      sold,
+      quantity,
+      category
+    );
 
     if (res && res.data) {
-      message.success('Tạo mới user thành công');
+      message.success('Tạo mới book thành công');
       form.resetFields();
+      setDataSlider([]);
+      setDataThumbnail([]);
       setOpenModalCreate(false);
       await props.fetchBook();
     } else {
@@ -92,6 +126,8 @@ const BookModalCreate = (props) => {
     return isJpgOrPng && isLt2M;
   };
 
+  // Cần phải truyền vào type để nó biết được là đang onChange cho biến nào
+  // info là biến thư viện nó cho chúng ta
   const handleChange = (info, type) => {
     if (info.file.status === 'uploading') {
       type ? setLoadingSlider(true) : setLoading(true);
@@ -113,9 +149,11 @@ const BookModalCreate = (props) => {
     }, 1000);
   };
 
+  // Cái giá trị `file` này thư viện nó đã cho chúng ta rồi
   const handleUploadFileThumbnail = async ({ file, onSuccess, onError }) => {
     const res = await callUploadBookImg(file);
     if (res && res.data) {
+      // tryền vào dataThumbnail là một object có 2 key: name, uid
       setDataThumbnail([
         {
           name: res.data.fileUploaded,
@@ -145,12 +183,14 @@ const BookModalCreate = (props) => {
     }
   };
 
+  // giá trị file này thư viện cho
   const handleRemoveFile = (file, type) => {
     if (type === 'thumbnail') {
       setDataThumbnail([]);
     }
+    // biến `file` là tấm ảnh mình thao tác lên
     if (type === 'slider') {
-      const newSlider = dataSlider.filter((x) => x.uid !== file.uid);
+      const newSlider = dataSlider.filter((itemFile) => itemFile.uid !== file.uid);
       setDataSlider(newSlider);
     }
   };
@@ -217,6 +257,7 @@ const BookModalCreate = (props) => {
                 <InputNumber
                   min={0}
                   style={{ width: '100%' }}
+                  //  Dùng hàm customize của nó để format giá tiền, hàm regular này có nghĩa là cứ 3 số(tính từ dưới) thì sẽ thêm một dấu phẩy
                   formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                   addonAfter="VNĐ"
                 />
@@ -231,9 +272,10 @@ const BookModalCreate = (props) => {
                 rules={[{ required: true, message: 'Vui lòng chọn thể loại!' }]}
               >
                 <Select
+                  // Mặc định ban đầu giá trị là null
                   defaultValue={null}
                   showSearch
-                  allowClear
+                  allowClear // Khi gõ vào sẽ có dấu 'X' cho chúng ta hủy
                   // onChange={handleChange}
                   options={listCategory}
                 />
@@ -273,6 +315,7 @@ const BookModalCreate = (props) => {
                   multiple={false}
                   customRequest={handleUploadFileThumbnail}
                   beforeUpload={handleBeforeUpload}
+                  // Chỗ này không nên như này (info) => handleChange(info, 'thumbnail'), vì ta đã viết logic cho 1 trong 2 ở hàm handleChange rồi
                   onChange={handleChange}
                   onRemove={(file) => handleRemoveFile(file, 'thumbnail')}
                   onPreview={handlePreview}

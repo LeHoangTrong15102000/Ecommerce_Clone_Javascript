@@ -33,6 +33,8 @@ const BookTable = (props) => {
   const [openModalCreate, setOpenModalCreate] = useState(false);
   const [openModalUpdate, setOpenModalUpdate] = useState(false);
 
+  const [dataUpdate, setDataUpdate] = useState(null);
+
   // const bookObject = {
   //   field_1: 'mainText',
   //   field_2: 'author',
@@ -301,6 +303,8 @@ const BookTable = (props) => {
       <BookModalUpdate
         openModalUpdate={openModalUpdate}
         setOpenModalUpdate={setOpenModalUpdate}
+        dataUpdate={dataUpdate}
+        setDataUpdate={setDataUpdate}
         fetchBook={fetchBook}
       />
     </>

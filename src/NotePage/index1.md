@@ -25,15 +25,69 @@
 
 - Về phần thêm book này chúng ta sẽ tự làm -> để nâng cao kĩ năng thôi không còn cách nào khác để có thể nâng cao kĩ năng lúc này bằng cách luyện tập cường độ cao rồi
 
+- Đối với phần thể loại của chúng ta chúng ta không nên `hardcode` thay vào đó chúng ta sẽ truyền từ database truyền xuống
+
+- Thằng Options của select nó cần truyền vào cái object có đinh dạng như này `{value: Giá trị , label: Giá trị}`
+
+- Để mà upload bên Thumbnail mà bên Slider không bị ảnh hưởng thì chúng ta cần cho nó làm 2 biến là `loading` và `loadingSlider` -> Và khi sử dụng hàm `onChange` thì cũng cần phải truyền vào `type` cho nó để phân biệt được là nó đang `onChange` cho biến nào
+
+- Đối với thầng Upload mặc định nó sẽ có thằng action nhưng đối với chúng ta, chúng ta sẽ tạo ra một `customRequest` Để thực hiện việc `upload` ảnh
+
+- Mỗi lần chúng ta nhấn `button` thì chúng ta phải `upload hình ảnh` đó lên server -> thì vấn đề này sẽ giải quyết ở bài giảng tiếp theo
+
 > 44 Bài tập Uplaod File
+
+- Trong video này sẽ tích hợp Api để upload hình ảnh
+
+- Sau khi upload file thành công cần lưu vào state của react -> Lưu vào state của react để `submit form và validate file`
+
+- Hàm `formatter`(transform giá trị hiển thị) -> Dùng hàm customize của nó để format giá tiền, hàm regular này có nghĩa là cứ 3 số(tính từ dưới) thì sẽ thêm một dấu phẩy -> Còn giá trị khi nhấn vào nút submit thì nó không hề có dấu phải đâu
+
+- Đối với việc thêm mới một `thumbnail` thì chúng ta sẽ gọi một Api riêng và việc submit chúng ta sẽ gọi một Api riêng -> Việc làm như vậy để chúng ta giảm thiểu thời gian chờ đợi cho người dùng, sau này khi chúng ta nhấn nút tạo mới thì chúng ta `không cần gửi file lên server` nữa
+  ++ Vì cái quá trình upload hình ảnh chỉ trả về tên `file` thôi(và quá trình đưa file lên server chính là quá trình ở đây luôn), nên khi người dùng tạo mới một quyển sách nên ở phần dữ liệu form của ảnh chỉ có `tên file của thumbnail và slider` gửi lên cùng `thông tin` của quyển sách -> Nên nó sẽ giảm thiểu được thời gian khi mà nhấn vào `tạo mới một quyển sách`
+
+  ++ Khi mà chúng ta không gửi file lên server cái Api tạo mới này nó sẽ được viết đơn giản hơn, người viết BE Api nó sẽ nhàn hơn -> Đó là lý do tại sao chúng ta nên tách ra làm thành 2 Api -> Đó là lý do tại sao viết 2 Api trên một cái màn hình
+
+- Api gửi file lên phía server dưới dạng `FormData` -> đồng thời sẽ ném về tên file khi mà upload thành công `fileUploaded: ${tên file}` -> Tên `file đã được mã hóa` cho nên không có chuyện `2 file có tên giống nhau`
+
+- Khi mà upload file thành công thì chúng ta có thể , `preview ảnh` , `Xóa ảnh` và xóa toàn bộ dữ liệu khi thoát khỏi `Modal`
+
+- Có một điều như thế này khi mà chúng ta `submit form` thì tấm ảnh `thumbnail hay slider` phải có tên hình ảnh nhưng mà khi chúng ta `upload` ảnh lên server thành công(chúng ta chỉ cần tên ảnh đó để đưa vào form thôi) -> Thì server sẽ trả về cho chúng ta một biến tên là `fileObject`(chính là file ảnh chúng ta upload lên) chứ không trả về cho chúng ta tên ảnh đâu -> Thành ra rằng để phục vụ cho mục đích là hôm sau chúng ta có data để truyền vào cái Api `CreateABook` -> Chúng ta sẽ lưu file ảnh upload thành công vào `state của thằng React`
+
+  ++ Xử lý hàm `handleRemoveFile` -> để mỗi lần chúng ta xóa ảnh đi thì chúng ta cũng cần phải `cập nhật state của thằng React`
+
+  ++ Song song với việc chúng ta thực hiện những thành động trên thì chúng ta cũng cần phải thực hiện thành động `PreviewImage` và khi close Modal thì `reset form`
+
+- Đối với Api `/api/v1/file/upload` thì ở phần `Header` chúng ta cần truyền lên `upload-type: book(value)` -> Tiếp theo trong phần body `key` là `fileImg: file ảnh raw uplaod` kiểu dữ liệu của chúng ta là `FormData`
+
+- Sau khi lấy gọi được Api để upload file ảnh -> Chúng ta sẽ tạo hàm handle việc `uploadFileThumbnail` và `uploadFileSlider` -> Lí do chia làm 2 hàm bởi vì mỗi một lần upload file thành công chúng ta cần lưu lại thông tin file đã upload thành công vào state của thằng React -> Chúng ta cần phải lưu lại bởi vì lát sau khi mà chúng ta nhấn vào nút `submitForm` chúng ta cần phải lấy ra được thông tin của cái `ảnh upload thành công` -> Nếu chúng ta muốn biết thằng form nó trả về gì cho chúng ta thì chúng ta cần `console.log` các thuộc tính `values` trong thằng form là được
+
+- Mục đích lưu tên file uplaod của server trả về vào state của React bởi vì chúng ta muốn lấy ra cái `tên file trên server trả về` để khi mà `submit form` chúng ta sẽ gửi cái file ảnh đó lên `server thì server mới nhận diện được` -> còn nếu truyền tên file ảnh gốc ban đầu `lên server` thì nó sẽ không nhận biết được
+
+- Đối với cái `Form` của chúng ta để hiển thị được ảnh(gọi đến Api upload ảnh) -> Thì nó đang lưu dưới dạng `fileObj` -> Đây không phải là điều mà chúng ta mong muốn, điều chúng ta mong muốn là `tên ảnh` chứ không phải `fileObj`
+- Khi mà `submit form` tên file `thumbnail và slider` là tên file gốc -> Mà cái server mong muốn là `tên file lúc upload file ảnh lên server` -> Tại vì nếu `upload ảnh cùng tên` thì đứa upload sau nó sẽ ghi đè lên đứa upload trước -> Làm mất dữ liệu ảnh -> Nên chúng ta cần nhờ server trả về tên mới hoàn toàn không trùng nhau giữa các ảnh
+
+- Đối với Slider khi mà ta `upload bao nhiều file ảnh thì nó sẽ gọi api bấy nhiêu lần` -> Nếu mà chúng ta không `clone lại dữ liệu ảnh upload trước` thì `ảnh upload sau nó sẽ đè lên` -> Nếu mà chúng ta gọi liên tiếp bao nhiêu lần thì `cái hàm setState nó ko chạy theo thứ tự đâu`(không biết state quá khứ) -> Thằng nào gọi cuối cùng thì nó sẽ chấp nhận mình thằng đấy
+
+- Biến `file` là `tấm ảnh mình thao tác lên`
+
+- Để biết lí do tại sao chúng ta lại làm vậy thì chúng ta cần console ra, và phía BE nó đang mong chờ cái gì -> Thì ở phía Fe chúng ta cần `customize` như nào dấy để chúng ta có thể lấy được data
 
 > 45 Bài tập Create a new book
 
-> 46 Bài tập Design form update hook
+- Dựa vào các biến của thằng React như `dataThumbnail` và `dataSlider` để lấy ra tên của từng file `đưa vào form` sau đó gửi lên server
 
-> 47 Bài tập Update a hook
+- Hoàn thành logic thêm mới một quyển sách -> Học được nhiều điều hay ho
 
-> 48 Bài tập Delete a hook
+> 46 Bài tập Design form update book
+
+- Design form UI cho phần `update book`
+
+- Trước khi gọi cái Api `Create a book` này đối với hàm `handleFinish` -> Nếu mà chúng ta không `upload file` vào `thumbnail và slider` mà chúng ta nhấn `submitForm` thì chúng ta sẽ thông báo lỗi -> Chúng ta sẽ validate thằng `thumbnail` khi mà người dùng ko `uploadFile ảnh lên` tại vì đối với thằng `Form của Antd` nó không hỗ trợ chúng ta validate trường `UploadFile` vì vậy chúng ta sẽ phải `validate bằng cơm`
+
+> 47 Bài tập Update a book
+
+> 48 Bài tập Delete a book
 
 > 49 Ôn tập các kiến thức đã học
 

@@ -46,14 +46,40 @@ export const callUpdateUser = (_id, fullName, phone) => {
   return axios.put('/api/v1/user', { _id, fullName, phone });
 };
 
-//
+/**
+ * Api Book module
+ */
+
+// Fetch List Book ở phân trang `Admin`
 export const callFetchListBook = (query) => {
   return axios.get(`/api/v1/book?${query}`);
 };
 
-// Create a book
-export const callCreateABook = (mainText, author, price) => {
-  return axios.post('/api/v1/book', {});
+// Create a book, phải truyền giá trị theo thứ tự để nó có thể mapping được
+export const callCreateABook = (
+  thumbnail,
+  slider,
+  mainText,
+  author,
+  price,
+  sold,
+  quantity,
+  category
+) => {
+  return axios.post('/api/v1/book', {
+    thumbnail,
+    slider,
+    mainText,
+    author,
+    price,
+    sold,
+    quantity,
+    category,
+  });
+};
+
+export const callUpdateBook = (bookId, body) => {
+  return axios.put(`/api/v1/book/${bookId}`, body);
 };
 
 export const callDeleteBook = (bookId) => {
@@ -62,10 +88,28 @@ export const callDeleteBook = (bookId) => {
 
 // FetchCategory
 export const callFetchCategory = () => {
-  return axios.get('/api/v1/category');
+  return axios.get('/api/v1/database/category');
 };
 
 // call Upload book img
-export const callUploadBookImg = () => {
-  return axios.post('/api/v1/book');
+export const callUploadBookImg = (fileImg) => {
+  const bodyFormData = new FormData();
+  bodyFormData.append('fileImg', fileImg); // cái biến gửi lên server phải cố tên là gifi fileImg
+  return axios({
+    method: 'post',
+    url: '/api/v1/file/upload',
+    data: bodyFormData,
+    headers: {
+      'Content-Type': 'multipart/form-data',
+      'upload-type': 'book',
+    },
+  });
 };
+
+/**
+ * Api orders
+ */
+
+/**
+ * Api dashboard
+ */
