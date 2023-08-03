@@ -1,11 +1,27 @@
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
-import { Col, Divider, Form, Input, Modal, Row, Upload } from 'antd';
+import {
+  Col,
+  Divider,
+  Form,
+  Input,
+  InputNumber,
+  Modal,
+  Row,
+  Select,
+  Upload,
+  message,
+  notification,
+} from 'antd';
 import { useEffect, useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
+import { callFetchCategory, callUpdateBook } from './../../../services/api';
+
+//  build Threads/ twitters clone https://www.youtube.com/watch?v=3CXYWkXAdqc
 
 const BookModalUpdate = (props) => {
   const { openModalUpdate, setOpenModalUpdate, dataUpdate, setDataUpdate } = props;
 
-  const [isSubmit, setSubmit] = useState(false);
+  const [isSubmit, setIsSubmit] = useState(false);
   const [listCategory, setListCategory] = useState([]);
   const [form] = Form.useForm();
 
@@ -23,25 +39,202 @@ const BookModalUpdate = (props) => {
 
   const [initForm, setInitForm] = useState(null);
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    const fetchCategory = async () => {
+      const res = await callFetchCategory();
+      if (res && res.data) {
+        const dataCategory = res.data.map((item) => {
+          return { label: item, value: item };
+        });
+        setListCategory(dataCategory);
+      }
+    };
+    fetchCategory();
+  }, []);
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    if (dataUpdate?._id) {
+      // Nếu có _id thì lấy ra arrThumbnail và arrSlider
+      const arrThumbnail = [
+        {
+          uid: uuidv4(),
+          name: dataUpdate.thumbnail,
+          status: 'done',
+          url: `${import.meta.env.VITE_BACKEND_URL}/images/book/${dataUpdate.thumbnail}`,
+        },
+      ];
 
-  const handleFinish = async (values) => {};
+      const arrSlider = dataUpdate?.slider?.map((item) => {
+        return {
+          uid: uuidv4(),
+          name: item,
+          status: 'done',
+          url: `${import.meta.env.VITE_BACKEND_URL}/images/book/${item}`,
+        };
+      });
 
-  const getBase64 = () => {};
+      // Tạo giá trị khởi tạo để hiển thị lên Form
+      const init = {
+        _id: dataUpdate._id,
+        mainText: dataUpdate.mainText,
+        author: dataUpdate.author,
+        price: dataUpdate.price,
+        category: dataUpdate.category,
+        quantity: dataUpdate.quantity,
+        sold: dataUpdate.sold,
+        thumbnail: { fileList: arrThumbnail },
+        slider: { fileList: arrSlider },
+      };
 
-  const handleBeforeUpload = (file) => {};
+      setInitForm(init);
+      setDataThumbnail(arrThumbnail);
+      setDataSlider(arrSlider);
+      //  Lấy dataUpdate truyền vào các trường trong form
+      form.setFieldsValue(init);
+    }
 
-  const handleChange = (file, type) => {};
+    // clean up
+    return () => {
+      form.resetFields();
+    };
+  }, [dataUpdate]);
 
-  const handleUploadFileThumbnail = async ({ file, onSuccess, onError }) => {};
+  const handleFinish = async (values) => {
+    if (dataThumbnail.length === 0) {
+      notification.error({
+        message: 'Lỗi validate',
+        description: 'Vui lòng upload ảnh thumbnail',
+      });
+      return;
+    }
 
-  const handleUploadFileSlider = async ({ file, onSuccess, onError }) => {};
+    if (dataSlider.length === 0) {
+      notification.error({
+        message: 'Lỗi validate',
+        description: 'Vui lòng upload ảnh slider',
+      });
+      return;
+    }
 
-  const handleRemoveFile = (file, type) => {};
+    const { mainText, author, price, sold, quantity, category } = values;
+    const thumbnail = dataThumbnail[0].name;
+    const slider = dataSlider.map((item) => item.name);
 
-  const handlePreview = async (file) => {};
+    setIsSubmit(true);
+    const res = await callUpdateBook({
+      thumbnail,
+      slider,
+      mainText,
+      author,
+      price,
+      sold,
+      quantity,
+      category,
+    });
+
+    if (res && res.data) {
+      message.success('Cập nhật sách thành công!');
+      form.resetFields();
+      setDataThumbnail([]);
+      setDataSlider([]);
+      setOpenModalUpdate(false);
+      props.fetchBook();
+    } else {
+      notification.error({
+        message: 'Đã có lỗi xảy ra',
+        description: res.message,
+      });
+    }
+    setIsSubmit(false);
+  };
+
+  const getBase64 = (img, callback) => {
+    const reader = new FileReader();
+    reader.addEventListener('load', () => callback(reader.result));
+    reader.readAsDataURL(img);
+  };
+
+  const handleBeforeUpload = (file) => {
+    const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+    if (!isJpgOrPng) {
+      message.error('You can only upload JPG/PNG file!');
+    }
+    const isLt2M = file.size / 1024 / 1024 < 2;
+    if (!isLt2M) {
+      message.error('Image must smaller than 2MB!');
+    }
+    return isJpgOrPng && isLt2M;
+  };
+
+  const handleChange = (file, type) => {
+    if (info.file.status === 'uploading') {
+      type ? setLoadingSlider(true) : setLoading(true);
+      return;
+    }
+    if (info.file.status === 'done') {
+      // Get this url from response in real world.
+      getBase64(info.file.originFileObj, (url) => {
+        type ? setLoadingSlider(false) : setLoading(false);
+        setImageUrl(url);
+      });
+    }
+  };
+
+  const handleUploadFileThumbnail = async ({ file, onSuccess, onError }) => {
+    const res = await callUploadBookImg(file);
+    if (res && res.data) {
+      setDataThumbnail([
+        {
+          name: res.data.fileUploaded,
+          uid: file.uid,
+        },
+      ]);
+      onSuccess('ok');
+    } else {
+      onError('Đã có lỗi khi upload file');
+    }
+  };
+
+  const handleUploadFileSlider = async ({ file, onSuccess, onError }) => {
+    const res = await callUploadBookImg(file);
+    if (res && res.data) {
+      //copy previous state => upload multiple images
+      setDataSlider((dataSlider) => [
+        ...dataSlider,
+        {
+          name: res.data.fileUploaded,
+          uid: file.uid,
+        },
+      ]);
+      onSuccess('ok');
+    } else {
+      onError('Đã có lỗi khi upload file');
+    }
+  };
+
+  const handleRemoveFile = (file, type) => {
+    if (type === 'thumbnail') {
+      setDataThumbnail([]);
+    }
+    if (type === 'slider') {
+      const newSlider = dataSlider.filter((x) => x.uid !== file.uid);
+      setDataSlider(newSlider);
+    }
+  };
+
+  const handlePreview = async (file) => {
+    if (file.url && !file.originFileObj) {
+      setPreviewImage(file.url);
+      setPreviewOpen(true);
+      setPreviewTitle(file.name || file.url.substring(file.url.lastIndexOf('/') + 1));
+      return;
+    }
+    getBase64(file.originFileObj, (url) => {
+      setPreviewImage(url);
+      setPreviewOpen(true);
+      setPreviewTitle(file.name || file.url.substring(file.url.lastIndexOf('/') + 1));
+    });
+  };
 
   return (
     <>
