@@ -137,6 +137,14 @@ url:`${import.meta.env.VITE_BACKEND_URL}/images/book/${item}`,
 
 > 51 Hiểm thị home page
 
+- Phần đầu tiên load động danh mục sản phẩm
+
+- Đối với phần filter có hàm khá chi là hay là hàm `onValuesChange` -> Mỗi lần cái giá trị của chúng ta thay đổi thì cái hàm này nó sẽ được gọi
+
+- Hàm onValuesChange giúp lưu được những thay đổi trong form -> Về phần xử lý data trong video tiếp theo thì chúng ta sẽ xử lý, Còn với việc dùng cái `component của thằng antd` chúng ta dùng thằng `Form` nó đã lấy hết các giá trị cần thiết cho chúng ta rồi -> Việc code logic giao diện được giảm thiểu rất chi là nhiều
+
+- Cái thứ 2 chúng ta cần phải làm là việc render ra đóng sách
+
 > 52 Bài tập Filter/Sorter
 
 > 53 Url với Params/Query

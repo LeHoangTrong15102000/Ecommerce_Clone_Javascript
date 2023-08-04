@@ -107,6 +107,13 @@ export const callUploadBookImg = (fileImg) => {
 };
 
 /**
+ * Api cho client book
+ *
+ *
+ * - Thực hiện 2 Api là getListBook(theo pagination) và getCategory
+ */
+
+/**
  * Api orders
  */
 
