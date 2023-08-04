@@ -110,7 +110,14 @@ const BookViewDetail = (props) => {
           <Descriptions.Item label="Updated At">
             {moment(dataViewDetail?.updatedAt).format(FORMAT_DATE_DISPLAY)}
           </Descriptions.Item>
+
+          <Descriptions.Item label="Số lượng">
+            {dataViewDetail?.quantity}
+          </Descriptions.Item>
+
+          <Descriptions.Item label="Đã bán">{dataViewDetail?.sold}</Descriptions.Item>
         </Descriptions>
+
         <Divider orientation="left"> Ảnh Books </Divider>
 
         <Upload

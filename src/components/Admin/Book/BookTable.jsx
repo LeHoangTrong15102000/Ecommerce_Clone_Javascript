@@ -15,6 +15,8 @@ import {
 import { callDeleteBook, callFetchListBook } from '../../../services/api';
 import moment from 'moment';
 import InputSearch from './InputSearch';
+import * as XLSX from 'xlsx';
+import omit from 'lodash/omit';
 
 const BookTable = (props) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -199,7 +201,7 @@ const BookTable = (props) => {
             style={{ backgroundColor: '#1677ff' }}
             icon={<ExportOutlined />}
             type="primary"
-            onClick={() => handleExportUser()}
+            onClick={() => handleExportBook()}
           >
             Export
           </Button>
@@ -252,7 +254,17 @@ const BookTable = (props) => {
     setFilter(query);
   };
 
-  const handleExportBook = () => {};
+  // Fix bỏ 2 trường thumbnail và slider ra khỏi
+  const handleExportBook = () => {
+    if (listBook.length > 0) {
+      // Dùng lodash bỏ ra 2 trường
+      const newListBook = listBook.map((item) => omit(item, ['thumbnail', 'slider']));
+      const worksheet = XLSX.utils.json_to_sheet(newListBook); // chuyển từ json sang sheet
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1'); // đặt tên sheet và thêm sheet đó vào book_append_sheet
+      XLSX.writeFile(workbook, 'ExportBook.csv'); // Sau đó viết ra file sheet
+    }
+  };
 
   return (
     <>

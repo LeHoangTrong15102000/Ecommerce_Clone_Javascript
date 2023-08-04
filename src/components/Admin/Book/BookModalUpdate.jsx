@@ -14,9 +14,11 @@ import {
 } from 'antd';
 import { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { callFetchCategory, callUpdateBook } from './../../../services/api';
-
-//  build Threads/ twitters clone https://www.youtube.com/watch?v=3CXYWkXAdqc
+import {
+  callFetchCategory,
+  callUpdateBook,
+  callUploadBookImg,
+} from './../../../services/api';
 
 const BookModalUpdate = (props) => {
   const { openModalUpdate, setOpenModalUpdate, dataUpdate, setDataUpdate } = props;
@@ -53,6 +55,7 @@ const BookModalUpdate = (props) => {
   }, []);
 
   useEffect(() => {
+    // Nên check trước nếu có dữ liệu thì hã nên thực hiện tiếp
     if (dataUpdate?._id) {
       // Nếu có _id thì lấy ra arrThumbnail và arrSlider
       const arrThumbnail = [
@@ -82,18 +85,19 @@ const BookModalUpdate = (props) => {
         category: dataUpdate.category,
         quantity: dataUpdate.quantity,
         sold: dataUpdate.sold,
-        thumbnail: { fileList: arrThumbnail },
+        thumbnail: { fileList: arrThumbnail }, // Chúng ta cần mòi lại data cho nó
         slider: { fileList: arrSlider },
       };
-
+      // Mục đích đưa thông tin vào state React để mỗi lần thông tin quyển sách hoặc tấm ảnh thay đổi thì cái Form sẽ render lại
       setInitForm(init);
       setDataThumbnail(arrThumbnail);
       setDataSlider(arrSlider);
       //  Lấy dataUpdate truyền vào các trường trong form
-      form.setFieldsValue(init);
+      form.setFieldsValue(init); // Về phần Form chỉ cần set data như này là nó sẽ ăn
     }
 
     // clean up
+    // Nên thêm cleanup để mỗi lần đóng Form thì dữ liệu trên Modal đó sẽ bị xóa
     return () => {
       form.resetFields();
     };
@@ -116,12 +120,12 @@ const BookModalUpdate = (props) => {
       return;
     }
 
-    const { mainText, author, price, sold, quantity, category } = values;
+    const { _id, mainText, author, price, sold, quantity, category } = values;
     const thumbnail = dataThumbnail[0].name;
     const slider = dataSlider.map((item) => item.name);
 
     setIsSubmit(true);
-    const res = await callUpdateBook({
+    const res = await callUpdateBook(_id, {
       thumbnail,
       slider,
       mainText,
@@ -166,7 +170,8 @@ const BookModalUpdate = (props) => {
     return isJpgOrPng && isLt2M;
   };
 
-  const handleChange = (file, type) => {
+  // info lấy ra thông của file upload
+  const handleChange = (info, type) => {
     if (info.file.status === 'uploading') {
       type ? setLoadingSlider(true) : setLoading(true);
       return;
@@ -217,19 +222,23 @@ const BookModalUpdate = (props) => {
       setDataThumbnail([]);
     }
     if (type === 'slider') {
-      const newSlider = dataSlider.filter((x) => x.uid !== file.uid);
+      const newSlider = dataSlider.filter((itemFile) => itemFile.uid !== file.uid);
       setDataSlider(newSlider);
     }
   };
 
   const handlePreview = async (file) => {
+    // Nếu đã convert qua base64 rồi thì biến file sẽ không có thuộc tính `originFileObj`
     if (file.url && !file.originFileObj) {
       setPreviewImage(file.url);
       setPreviewOpen(true);
       setPreviewTitle(file.name || file.url.substring(file.url.lastIndexOf('/') + 1));
       return;
     }
+
+    // Còn nếu ảnh chưa upload thì nó sẽ có thuộc tính `originFileObj`
     getBase64(file.originFileObj, (url) => {
+      // Khi get base64 thì nõ sẽ trả về cái `url` sau đó chúng ta mới có thể preview được ảnh
       setPreviewImage(url);
       setPreviewOpen(true);
       setPreviewTitle(file.name || file.url.substring(file.url.lastIndexOf('/') + 1));
@@ -250,7 +259,7 @@ const BookModalUpdate = (props) => {
           setDataUpdate(null);
           setOpenModalUpdate(false);
         }}
-        okText={'Tạo mới'}
+        okText={'Cập nhật'}
         cancelText={'Hủy'}
         confirmLoading={isSubmit}
         width={'50vw'}
@@ -260,6 +269,12 @@ const BookModalUpdate = (props) => {
 
         <Form form={form} name="basic" onFinish={handleFinish} autoComplete="off">
           <Row gutter={15}>
+            <Col hidden>
+              <Form.Item hidden labelCol={{ span: 24 }} label="Tên sách" name="_id">
+                <Input />
+              </Form.Item>
+            </Col>
+
             <Col span={12}>
               <Form.Item
                 labelCol={{ span: 24 }}
@@ -350,6 +365,7 @@ const BookModalUpdate = (props) => {
                   onChange={handleChange}
                   onRemove={(file) => handleRemoveFile(file, 'thumbnail')}
                   onPreview={handlePreview}
+                  // Phải ghi đè ở đây thì nó mới hiển thị hình ảnh ra cho chúng ta được
                   defaultFileList={initForm?.thumbnail?.fileList ?? []}
                 >
                   <div>

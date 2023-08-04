@@ -87,11 +87,53 @@
 
 > 47 Bài tập Update a book
 
+- Đối với phần Update quyển để sách thì để có thể đưa hình anh quyển sách vào `ModalUpdateBook` thì ở `component Upload` chúng ta cần truyền vào(để init được giá trị cho nó) cho nó một cái props tên là `defaultFileList` -> Nó nhận vào giá trị là một `FileList`
+  ++ Nên vấn đề đầu tiên là chúng ta cần phải build được data theo đúng dịnh dạng
+  ++ Cần phải build được định dạng như này cho nó
+  `uid: uuidv4(),
+name: item, // item trong slider chính là tên bước ảnh
+status: 'done',
+url:`${import.meta.env.VITE_BACKEND_URL}/images/book/${item}`,
+      `
+
+  ++ Thành ra ở phần `UpdateBook` đối với những ảnh nào chúng ta đã upload rồi chúng ta cần phải `build lên` cho nó -> Chúng ta tạo một state React để lưu giá trị `build của ảnh upload` -> Chúng ta dùng state của React `initForm` ở đây để mỗi một lần chúng ta thay đổi state thì chúng ta sẽ ép cái `Form render lại`
+
+- Đối với cái form của `Update Book` có một vài vấn đề chúng ta sẽ không thể nào thích được -> Vấn đề của cái Form này, cho dù sau này cái biến state `initForm` mà cái form của chúng ta nó không render lại thì nó vẫn sai -> Chúng ta bị vấn đề này là do cái `Form` của chúng ta đang nằm trên phần Modal -> Thật chất là khi mà ta nhấn nút tắt Modal là Modal chúng ta sẽ tắt hoàn toàn đâu, nó vẫn nằm trên `cây DOM của thằng React` nó nhảy ảnh loạn xì ngầuu, nên chúng ta sẽ thêm cleanup function vào -> Khó mà làm nhiều thì chúng ta sẽ quen mà thôi
+
+  ++ Build 1 data cho `ArrayThumbnail` , và sau đó build một data cho `ArraySlider` -> Hình ảnh chúng ta sẽ lấy dựa vào data trả về
+  ++ Sau khi có 2 thầng `arrThumbnail và arrSlider` chúng ta sẽ build tất cả data của chúng ta lên trên cái `Form`
+  ++ Về cái `_id` chúng ta cần phải truyền lên, nên chúng ta sẽ lưu luôn thằng `_id` này bên trong cái Form luôn
+
+  ++ Ngoài ra để hiển thị ảnh của chúng ta sẽ gán 2 cái tên `arrThumbnail và arrSlider` với cái tên cực kì đặc biệt
+
+- Đối với cái `component Form` của chúng ta mặc định nó sẽ lưu giá trị dưới 2 key là `file` và `fileList`
+  ++ `fileList` chính là tất cả các ảnh đang hiển thị trên màn hình, còn `file` nó sẽ lưu tấm ảnh gần nhất chúng ta `upload` lên
+
+  -> Thành ra rằng để `update quyển book` chúng ta cần `mòi` lại data cho nó -> Mục đích của việc mòi là để nó hiển thị lên màn hình -> Từ đó chúng ta mới có thể thao tác và chỉnh sửa được
+
+- Đối với 2 thằng `UploadFileThumbnail và UploadFileSlider` chúng ta cần ghi đè giá trị của nó ở phần `defaultFileList` -> Nếu mà mặc dù chúng ta đã `form.setFieldsValue(init)` nhưng đôi khi nó sẽ không ăn vào `component Upload` cho chúng ta thường nó chỉ ăn vào hàm `Input` nên chúng ta cần phải ghi đè giá trị lại `defaultFileList={initForm?.thumbnail?.fileList ?? []}` -> Chúng ta phải ghi đè giá trị thì nó mói hiển thị được hình ảnh cho chúng ta
+
+- Nếu mà dùng biến thuộc tính `fileList` thay vì `defaultFileList` -> Vì `fileList` thì lúc nào nó cũng cố đinh giá trị đó luôn không thể thay đổi được(thêm và xóa) ,còn `defaultFileList` thì khởi tạo nó đã có giá trị như vậy rồi sau đó chúng ta có thể thêm sửa xóa là chuyện của chúng ta
+
+- Ở hàm `handlePreview` đối với các ảnh nào chúng ta đã `upload rồi` thì chúng ta `không cần convert` qua `base64` đâu
+
+- Ở cái hàm handlePreview chúng ta `cần viết thêm logic cho component nếu ảnh chúng ta đã upload rồi` không cần phải `convert qua base64` nữa -> Vì thư viện lúc upload ảnh(thư viện nắm ảnh gốc của chúng ta) cho chúng ta `nó đã convert qua base64` nên chúng ta sẽ sử dụng đường link `url` để xem ảnh
+  ++ Vì khi build ảnh chúng ta sẽ sử dụng ảnh có sẵn(đã được upload từ trước ), còn khi chúng ta tạo mới thì thư viện tạo mới cho chúng ta(nó nắm được file gốc)-> Còn khi mà `build ảnh thì chúng ta chỉ có đường link URL mà thôi`
+
+- Tại sao chúng ta cần `reset cái form` mỗi lần chúng ta nhấn vào từng quyển sách -> Chúng ta ép cái Modal lúc nào nó cũng phải `resetData` lại cho chúng ta -> Mỗi lần `dataUpdate` thay đổi thì chúng ta ép Modal lúc nào cũng phải `reset data` hết
+
 > 48 Bài tập Delete a book
+
+- Hoàn thành bài tập delete Book
 
 > 49 Ôn tập các kiến thức đã học
 
+- Đã ôn lại tất kiến thức đã học được ở chương này -> Vận dụng tự làm các project khác nhau
+
 > 50 Bài tập design giao diện client(homepage)
+
+- Chúng sử dụng component Form ở trong component Filter để khi mà chúng ta filter thì giao diện sản phẩm nó sẽ được render lại
+- Đối với thằng Form nó có hàm là `onValuesChange` khi chúng ta nhấn vào `ô checkbox` hay nhấn vào `button Áp dụng` thì nó cũng sẽ load dữ liệu cho chúng ta hết
 
 > 51 Hiểm thị home page
 
