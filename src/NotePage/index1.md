@@ -206,6 +206,8 @@ url:`${import.meta.env.VITE_BACKEND_URL}/images/book/${item}`,
 
 > 54 Bài tập Design View Detail Page
 
+- Dùng trường Id để gọi Api lấy ra được chi tiết quyển sách
+
 > 55 Chức năng View Detail Book
 
 > 56 Thêm Loading Skeleton
