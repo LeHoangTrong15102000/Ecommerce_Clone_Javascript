@@ -10,12 +10,15 @@ import {
   Button,
   Rate,
   Pagination,
+  Spin,
 } from 'antd';
 import './home.scss';
 import { callFetchCategory, callFetchListBook, callLogin } from '../../services/api';
 import { useEffect, useState } from 'react';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 const Home = () => {
+  const navigate = useNavigate();
   const [listCategory, setListCategory] = useState([]);
   const [form] = Form.useForm();
 
@@ -51,7 +54,6 @@ const Home = () => {
     setIsLoading(true);
 
     let query = `current=${current}&pageSize=${pageSize}`;
-
     if (filter) {
       query += `&${filter}`;
     }
@@ -65,18 +67,29 @@ const Home = () => {
       setListBook(res.data.result);
       setTotal(res.data.meta.total);
     }
-
-    console.log('Check listBook >>>>>', listBook);
-
+    // console.log('Check listBook >>>>>', listBook);
     setIsLoading(false);
   };
 
   const handleChangeFilter = (changedValues, values) => {
-    console.log('>>>> check handleChangeFilter', changedValues, values);
+    // console.log('>>>> check handleChangeFilter', changedValues, values);
+
+    // only fire if category changes
+    if (changedValues.category) {
+      const cate = values.category;
+      if (cate && cate.length > 0) {
+        const filter = cate.join(',');
+        setFilter(`category=${filter}`);
+      } else {
+        // reset data -> fetch all
+        setFilter('');
+      }
+    }
   };
 
   // Đúng ra thì chỉ cần điền vào params là current và pageSize thôi do chúng ta lười :v
   const handleOnChangePage = (pagination) => {
+    // pagination.current là hành động di chuyển tới trang mới khác với current ban đầu
     if (pagination && pagination.current !== current) {
       setCurrent(pagination.current);
     }
@@ -88,7 +101,66 @@ const Home = () => {
   };
 
   const handleFinish = (values) => {
-    const {} = values;
+    // xử lý finish cho ô khoảng giá
+
+    // Phải có điều giá ở cả 2 phải lớn hơn 0
+    if (values?.range?.from >= 0 && values?.range?.to >= 0) {
+      // Chúng ta muốn price lớn hơn from và nhỏ hơn to thì mới setFilter
+      let filter = `price>=${values?.range?.from}&price<=${values?.range?.to}`;
+      if (values?.category?.length) {
+        const cate = values?.category?.join(',');
+        filter += `&category=${cate}`; // và cộng thêm filter ở phần Category nữa
+      }
+      setFilter(filter);
+    }
+  };
+
+  const nonAccentVietnamese = (str) => {
+    str = str.replace(/A|Á|À|Ã|Ạ|Â|Ấ|Ầ|Ẫ|Ậ|Ă|Ắ|Ằ|Ẵ|Ặ/g, 'A');
+    str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, 'a');
+    str = str.replace(/E|É|È|Ẽ|Ẹ|Ê|Ế|Ề|Ễ|Ệ/, 'E');
+    str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g, 'e');
+    str = str.replace(/I|Í|Ì|Ĩ|Ị/g, 'I');
+    str = str.replace(/ì|í|ị|ỉ|ĩ/g, 'i');
+    str = str.replace(/O|Ó|Ò|Õ|Ọ|Ô|Ố|Ồ|Ỗ|Ộ|Ơ|Ớ|Ờ|Ỡ|Ợ/g, 'O');
+    str = str.replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g, 'o');
+    str = str.replace(/U|Ú|Ù|Ũ|Ụ|Ư|Ứ|Ừ|Ữ|Ự/g, 'U');
+    str = str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g, 'u');
+    str = str.replace(/Y|Ý|Ỳ|Ỹ|Ỵ/g, 'Y');
+    str = str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g, 'y');
+    str = str.replace(/Đ/g, 'D');
+    str = str.replace(/đ/g, 'd');
+    // Some system encode vietnamese combining accent as individual utf-8 characters
+    str = str.replace(/\u0300|\u0301|\u0303|\u0309|\u0323/g, ''); // Huyền sắc hỏi ngã nặng
+    str = str.replace(/\u02C6|\u0306|\u031B/g, ''); // Â, Ê, Ă, Ơ, Ư
+    return str;
+  };
+
+  const convertSlug = (str) => {
+    str = nonAccentVietnamese(str);
+    str = str.replace(/^\s+|\s+$/g, ''); // trim
+    str = str.toLowerCase();
+
+    // remove accents, swap ñ for n, etc
+    const from =
+      'ÁÄÂÀÃÅČÇĆĎÉĚËÈÊẼĔȆĞÍÌÎÏİŇÑÓÖÒÔÕØŘŔŠŞŤÚŮÜÙÛÝŸŽáäâàãåčçćďéěëèêẽĕȇğíìîïıňñóöòôõøðřŕšşťúůüùûýÿžþÞĐđßÆa·/_,:;';
+    const to =
+      'AAAAAACCCDEEEEEEEEGIIIIINNOOOOOORRSSTUUUUUYYZaaaaaacccdeeeeeeeegiiiiinnooooooorrsstuuuuuyyzbBDdBAa------';
+    for (let i = 0, l = from.length; i < l; i++) {
+      str = str.replace(new RegExp(from.charAt(i), 'g'), to.charAt(i));
+    }
+
+    str = str
+      .replace(/[^a-z0-9 -]/g, '') // remove invalid chars
+      .replace(/\s+/g, '-') // collapse whitespace and replace by -
+      .replace(/-+/g, '-'); // collapse dashes
+
+    return str;
+  };
+
+  const handleRedirectBook = (book) => {
+    const slug = convertSlug(book.mainText); // Chuyển tên thành không dấu  và thêm gạch giữa
+    navigate(`/book/${slug}?id=${book._id}`); // sau đó navigate nó đến trang bookPage, có kèm đường link params trên đó
   };
 
   const handleChange = (key) => {
@@ -97,22 +169,22 @@ const Home = () => {
 
   const items = [
     {
-      key: '1',
+      key: 'sort=-sold',
       label: 'Phổ Biến',
       children: <></>,
     },
     {
-      key: '2',
+      key: 'sort=-updatedAt',
       label: 'Hàng Mới',
       children: <></>,
     },
     {
-      key: '3',
+      key: 'sort=price',
       label: 'Giá Thấp Đến Cao',
       children: <></>,
     },
     {
-      key: '4',
+      key: 'sort=-price',
       label: 'Giá Cao Đến Thấp',
       children: <></>,
     },
@@ -132,7 +204,13 @@ const Home = () => {
                 </span>
 
                 {/* Để reset cái filter chỉ cần form.resetFields() */}
-                <ReloadOutlined title="Reset" onClick={() => form.resetFields()} />
+                <ReloadOutlined
+                  title="Reset"
+                  onClick={() => {
+                    form.resetFields();
+                    setFilter('');
+                  }}
+                />
               </div>
               <Divider />
 
@@ -222,6 +300,7 @@ const Home = () => {
                   </Row>
                   <div>
                     <Button
+                      // form.submit() nó sẽ trigger hàm handleFinish
                       onClick={() => form.submit()}
                       style={{ width: '100%', backgroundColor: '#1677ff' }}
                       type="primary"
@@ -263,67 +342,77 @@ const Home = () => {
           {/* Mặc định số cột trong antd là 24 */}
           {/* Cột sản phẩm chính  */}
           <Col md={20} xs={24}>
-            <div style={{ padding: '20px', backgroundColor: '#fff', borderRadius: 5 }}>
-              <Row>
-                <Tabs
-                  defaultActiveKey="sort=-sold"
-                  items={items}
-                  onChange={(value) => {
-                    setSortQuery(value);
-                  }}
-                  style={{ overflowX: 'auto' }}
-                />
-              </Row>
-              <Row className="customize-row">
-                {listBook?.map((item, index) => {
-                  return (
-                    <div className="column" key={`book-${index}`}>
-                      <div className="wrapper">
-                        <div className="thumbnail">
-                          <img
-                            src={`${import.meta.env.VITE_BACKEND_URL}/images/book/${
-                              item.thumbnail
-                            }`}
-                            alt="thumbnail book"
-                          />
-                        </div>
-                        <div className="text" title={item.mainText}>
-                          {item.mainText}
-                        </div>
-                        <div className="price">
-                          {new Intl.NumberFormat('vi-VN', {
-                            style: 'currency',
-                            currency: 'VND',
-                          }).format(item.price)}
-                        </div>
-                        <div className="rating">
-                          <Rate
-                            value={5}
-                            disabled
-                            style={{ color: '#ffce3d', fontSize: 10 }}
-                          />
-                          <span>Đã bán {item.sold}</span>
+            <Spin spinning={isLoading} tip="Loading...">
+              <div style={{ padding: '20px', backgroundColor: '#fff', borderRadius: 5 }}>
+                <Row>
+                  <Tabs
+                    defaultActiveKey="sort=-sold"
+                    items={items}
+                    // Mỗi lần thay đổi tabs thì giá trị activeKey sẽ được trả về
+                    onChange={(value) => {
+                      // nhờ vào cái active key này chúng ta sẽ sort sản phẩm
+                      setSortQuery(value);
+                    }}
+                    style={{ overflowX: 'auto' }}
+                  />
+                </Row>
+                <Row className="customize-row">
+                  {listBook?.map((item, index) => {
+                    return (
+                      <div
+                        className="column"
+                        key={`book-${index}`}
+                        onClick={() => handleRedirectBook(item)}
+                      >
+                        <div className="wrapper">
+                          <div className="thumbnail">
+                            <img
+                              src={`${import.meta.env.VITE_BACKEND_URL}/images/book/${
+                                item.thumbnail
+                              }`}
+                              alt="thumbnail book"
+                            />
+                          </div>
+                          <div className="text" title={item.mainText}>
+                            {item.mainText}
+                          </div>
+                          <div className="price">
+                            {new Intl.NumberFormat('vi-VN', {
+                              style: 'currency',
+                              currency: 'VND',
+                            }).format(item?.price ?? 0)}
+                          </div>
+                          <div className="rating">
+                            <Rate
+                              value={5}
+                              disabled
+                              style={{ color: '#ffce3d', fontSize: 10 }}
+                            />
+                            <span>Đã bán {item.sold}</span>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  );
-                })}
-              </Row>
-              <Divider />
+                    );
+                  })}
+                </Row>
+                {/* <Divider /> */}
 
-              {/* DefaultCurrent mặc định đang ở trang thứ 6 trên 50 trang */}
-              <Row style={{ display: 'flex', justifyContent: 'center' }}>
-                <Pagination
-                  current={current}
-                  total={total}
-                  pageSize={pageSize}
-                  responsive
-                  // p: page, s: pageSize, 2 biến này thư viện cho sẵn, nó sẽ theo thứ tự p: page, s: pageSize
-                  // biến current sẽ nhận giá trị của `p` và biến pageSize sẽ nhận giá trị của `s`
-                  onChange={(p, s) => handleOnChangePage({ current: p, pageSize: s })}
-                />
-              </Row>
-            </div>
+                <div style={{ marginTop: 30 }}></div>
+
+                {/* DefaultCurrent mặc định đang ở trang thứ 6 trên 50 trang */}
+                <Row style={{ display: 'flex', justifyContent: 'center' }}>
+                  <Pagination
+                    current={current}
+                    total={total}
+                    pageSize={pageSize}
+                    responsive
+                    // p: page, s: pageSize, 2 biến này thư viện cho sẵn, nó sẽ theo thứ tự p: page, s: pageSize
+                    // biến current sẽ nhận giá trị của `p` và biến pageSize sẽ nhận giá trị của `s`
+                    onChange={(p, s) => handleOnChangePage({ current: p, pageSize: s })}
+                  />
+                </Row>
+              </div>
+            </Spin>
           </Col>
         </Row>
       </div>

@@ -280,6 +280,7 @@ const BookTable = (props) => {
             loading={isLoading}
             columns={columns}
             dataSource={listBook}
+            // Trong hàm onChange của Table có props Pagination, sorter, filter, extra
             onChange={handleChange}
             rowKey="_id"
             pagination={{

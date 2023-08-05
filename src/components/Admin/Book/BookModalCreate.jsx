@@ -19,6 +19,7 @@ import {
   callFetchCategory,
   callUploadBookImg,
 } from '../../../services/api';
+import { flatten } from 'lodash';
 
 const BookModalCreate = (props) => {
   const { openModalCreate, setOpenModalCreate } = props;
@@ -114,7 +115,12 @@ const BookModalCreate = (props) => {
   };
 
   const handleBeforeUpload = (file) => {
-    const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+    const isJpgOrPng =
+      file.type === 'image/jpeg' ||
+      file.type === 'image/png' ||
+      file.type === 'image/webp' ||
+      file.type === 'image/gif' ||
+      file.type === 'image/svg';
     if (!isJpgOrPng) {
       message.error('You can only upload JPG/PNG file!');
     }

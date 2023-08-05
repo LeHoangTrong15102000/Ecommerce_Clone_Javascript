@@ -147,7 +147,62 @@ url:`${import.meta.env.VITE_BACKEND_URL}/images/book/${item}`,
 
 > 52 Bài tập Filter/Sorter
 
+- Mỗi lần chúng ta click vào `Category` thì những sản phẩm nào thuộc danh mục `Category`(là một cái mảng chứa các giá trị chúng ta checkbox vào) -> Thì những sản phẩm nào thuộc cái lĩnh vực trong `Category` thì chúng ta mới hiển thị lên
+
+- Chúng ta làm được điều này vì trong cái Api của chúng ta có thuộc tính là `Category` -> Bẩn chất của mỗi một lần chúng ta click vào là chúng ta cần phải gọi `Api để có thể filter` được
+
+- Về phần lọc giá cả chúng ta sẽ lọc những sản phẩm nào trong khoảng giá từ `From` đến `To` trong api trả về -> Sẽ trả về những sản phẩm phù hợp, khi mà nhấn `reset` nó cũng sẽ clear phần `khoảng giá` đồng thời nó sẽ `fetch lại data` cho chúng ta
+
+- Với phần `tabs` mỗi lần chúng ta chuyển `tabs` thì nó cũng cần phải `lọc` được theo `tiêu chí tương ứng`
+  ++ Phổ biến -> Sold (Sau này đi làm nó sẽ có nhiều tiêu chí hơn, vd như: 1 tháng bán được bao nhiều quyển sách , doanh thu chẳng hạn,...)
+  ++ Hàng mới -> updatedAt
+  ++ Giá cao đến thấp -> price
+  ++ Giá thấp đến cao -> price
+
+- Đối với APi lấy danh sách tương tự làm với phần admin -> Chúng ta chỉ cần sắp xếp theo các trường filter thì nó sẽ tự động `filter` cho chúng ta -> Về phần Api Chúng ta không cần phải sửa gì đâu, điều quan trọng là làm sao chúng ta khiến cái Api đó hoạt động cho chúng ta là được
+
+- Đối với thằng component `tabs` chúng ta có cái sụ kiện là `onChange` -> Mỗi một lần chúng ta click vào `tabs` thì nó sẽ ném về cho chúng ta cái `key` -> Trong đầu chúng ta bây giờ sẽ suy nghĩa bây giờ chúng ta sẽ gán cái `key` bằng cái phần chúng ta muốn `update` hay nói cách khác là muốn `sort`
+
+- Tới phần `filter` cho danh mục sản phẩm -> Phần `filter` danh mục sản phẩm này nó sẽ khó hơn một chút thành ra rằng chút ta cần phải hiêu được cơ chế hoạt động của BE -> Đây chính là tư duy sau này chúng ta làm BE chúng ta cần phải có, làm `FE` mà chúng ta `hiểu được` thì chúng ta `trao đổi` với thằng `BE` `cực kì dễ`
+  ++ Để làm được phần này thì chúng ta có sử dụng thư viện `api-query-params` cho thằng BE
+  ++ Trước khi đi vào phần này thì chúng ta cần cho phần fetch những quyển book cái `loading` -> Dùng `component Spin` để loading book nhìn chó nó tường minh hơn
+
+  ++ Đối với package này chúng ta có vài tiêu chí để search -> Chúng ta phải hiểu chúng ta search như thế nào thì chúng ta mới có thể truyền được data cho nó -> Nếu mà như trong SQL thì nó sẽ như thế này (chọn tất cả danh mục với category in []) bởi vì chúng ta `filter nhiều tiêu chí` nên phải là một cái array
+
+  ++ Để làm được điều ấy chúng ta cần sử dụng toán tử `$in` để ánh xạ qua phần BE -> thằng BE nó cần phải dùng toán tử `$in` ở phía FE để cho thằng BE có thể hiểu được rằng `chúng ta đang truyền lên một cái biến` và muốn lấy theo thuộc tính `$in` -> Chúng ta cần phải build như sau, chúng ta sẽ truyền từng giá trị nhưng mà `chúng ta phải thêm vào dấu phẩy giữa các giá trị`
+
+  ++ Khi mà FE mà biết về BE thì 2 bên giao tiếp cực kì dễ -> phía FE chúng ta truyền lên như vậy thì chúng ta yêu cầu phía BE phải lo tìm điều kiện `$inx`
+
+  ++ Vậy làm sao chúng ta có thể bắt được sự kiện mỗi một lần chúng ta click vào ô `checkbox`(chúng ta sẽ gọi lại APi) -> Chúng ta sẽ không đi code dài dòng thay vì vậy chúng ta sẽ dùng cái `Form của thằng antd` nó sẽ giúp chúng ta bắt được sự kiện mỗi một lần người dùng click vào ô `checkbox`
+
+  ++ Mỗi lần ta click vào checkbox thì giá trị sẽ thay đổi để làm được điều đấy thì thằng antd nó đã cho chúng ta một hàm đó là `onValuesChange(changedValues ,values) : changedValues- giá trị thay đổi, values - giá trị trên cả cái form` -> Đây là cái hay mà thư viện nó giành cho chúng ta chúng ta không cần phải code thuần nữa thay vào đó thư viện nó đã hỗ trợ hết cho chúng ta rồi
+
+  ++ Sau khi đã lấy được giá trị của `Category` ra do nó đang lưu dưới dạng `Array` chúng ta cần phải convert nó sang `string` và các giá trị phải cách nhau bởi dấu `,` ví dụ như: Art,Bussiness,Travel, ...
+
+- Sau khi đã submit cái Form thì chúng ta sẽ lấy ra được giá trị ở cái Form khoảng giá trong biến `range là một cái array`
+
+- Lí do chúng ta điền toán tử `>=` và `<=` là do ở phía BE nó mong đợi chúng ta truyền vào toán tử đó cho nó `lte và gte` -> Ở đây khi mà chúng ta search với khoảng giá mà có thêm category thì chúng ta sẽ cộng thêm phần filter của `category` vào nữa
+
 > 53 Url với Params/Query
+
+- Xử lý URL với Params và Query
+
+- Về các trang thương mại điện tử nó sẽ trả về đường link URL, gồm tên sản phẩm tiếp theo trên đường link `URL` nó sẽ ném kèm theo các tham số để cho chúng ta biết rằng chúng ta đang vào `sản phẩm nào`
+  ++ Như đã chia sẻ ở các video lần trước nêu như ai đã học BE thì các đường link URL cực kì đơn giản
+
+  ++ Việc điền tên phẩm lên đường Link URL thì nó sẽ tốt cho SEO(Search Engine Optimization)
+
+- Sau khi mà chúng ta đã hiểu được ý nghĩa của việc chúng ta convert như thế này -> Chúng ta có từ chuyên nghiệp để chỉ cho đường link chúng ta convert như thế này -> Người ta gọi là `Slug Url`(từ những keyword ban đầu chúng ta sẽ truyền qua kiểu gạch ngang nối chuỗi)
+
+  ++ Biến mà truyền sau dấu gạch chéo không người ta gọi là `params(tham số)` còn những biến có dấu chấm hỏi phía trước đường Link ngta gọi là `query` -> Lát nữa chúng ta sẽ quay lại chúng ta có một thằng gọi là `Location`
+
+  ++ Việc duy nhất trong video này là khi chúng ta nhấn vào quyển sách bất kì -> Nó sẽ lấy ra được tên tiêu đề của quyển sách, đồng thời chúng ta cần phải lấy ra được `_id` của quyển sách đó
+
+  ++ Chúng ta cần `_id` để chúng ta có thể query xuống db `gọi Api của BE` để hiển thị lên data của quyển sách mà chúng ta đang muốn xem
+
+- Chúng ta phải convert tiêu đề có chữ sang tiêu đề không có chữ
+
+- Location sẽ trả về URL đường dẫn mà chúng ta trả về -> Cụ thể gồm `pathname` gồm params đường dẫn phía trước dấu chấm `?` , và phần `search` là đoạn URL phía sau dấu chấm `?`
 
 > 54 Bài tập Design View Detail Page
 

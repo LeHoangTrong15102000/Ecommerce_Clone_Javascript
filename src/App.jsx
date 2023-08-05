@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Book from './pages/Admin/Book/Book';
-import Contact from './pages/contact';
 import Login from './pages/Login/Login';
 import { Outlet } from 'react-router-dom';
 import Header from './components/Header';
@@ -18,6 +17,8 @@ import ProtectedRoute from './components/ProtectedRoute';
 import LayoutAdmin from './components/Admin/LayoutAdmin';
 import './styles/reset.scss';
 import UserTable from './components/Admin/User/UserTable';
+import BookPage from './pages/Book/Book';
+import ContactPage from './pages/contact/Contact';
 
 const Layout = () => {
   return (
@@ -62,11 +63,11 @@ export default function App() {
         },
         {
           path: 'contact',
-          element: <Contact />,
+          element: <ContactPage />,
         },
         {
-          path: 'book',
-          elementt: <Book />,
+          path: 'book/:slug',
+          element: <BookPage />,
         },
       ],
     },
