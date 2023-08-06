@@ -240,6 +240,8 @@ url:`${import.meta.env.VITE_BACKEND_URL}/images/book/${item}`,
 
 - Người ta thuê chúng ta về để sau này có thể xử lý được phần logic , handle `sự kiện` đối với sản phẩm của khách hàng, chứ người ta không thuê chúng ta về `ngồi chơi xơi nước` đâu -> Trong quá trình chúng ta làm chúng ta cần phải đọc tài liệu, search google và cần phải đọc ngược lại mã nguồn của thư viện để biết rằng chúng ta có thể áp dụng công nghệ đó như thế nào
 
+- gutter là khoảng cách 2 vật tính theo phương của nó, ví dụ như `horizontal - phương ngang` thì khoảng cách giữa 2 vật theo phương ngang
+
 ## Module Orders
 
 > 59 setup redux persist

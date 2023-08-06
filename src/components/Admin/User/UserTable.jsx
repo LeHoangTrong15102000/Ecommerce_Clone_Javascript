@@ -285,6 +285,7 @@ const UserTable = () => {
 
   return (
     <>
+      {/* Là khoảng cách horizontal và vertical */}
       <Row gutter={[20, 20]}>
         <Col span={24}>
           <InputSearch handleSearch={handleSearch} setFilter={setFilter} />
