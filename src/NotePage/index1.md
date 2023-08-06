@@ -210,11 +210,35 @@ url:`${import.meta.env.VITE_BACKEND_URL}/images/book/${item}`,
 
 > 55 Chức năng View Detail Book
 
+- Để sử dụng thư viện React image gallery thì chúng ta chỉ cần dùng component của nó thôi đồng thời chúng ta cần build lên được những hình ảnh mà chúng ta cần truyền vào -> lát nữa chúng ta sẽ nói về cái bug liên quan đến hover vào tấm ảnh nó tự nhảy đi
+
+  ++ `SlideonThumbnailOver` là thuộc tính của thằng react-image-gallery giúp chúng ta lướt qua những tấm ảnh mà chỉ cần hover vào
+
+  ++ Có một cái bug là mỗi lần mình di chuyển ngược về thì nó bị nhảy giao diện -> Đây là một cái bug của thư viện -> Đối với cái thằng này trong quá trình chúng ta code chúng ta có ghi cái `class` nào có tên là `left` hay `right` thì nó sẽ ghi đè lại thư viện -> Thư viện nó củ chuối là như vậy
+
+  ++ Khi chúng ta nhấn vào cái hình ảnh thứ 2 và khi nhấn vào cái Modal thì hình ảnh thứ 2 nó phải hiện lên -> Đây chính là một cái bug lát nữa chúng ta sẽ xử lý sau.
+
+  ++ Và ở cái `Modal` chúng ta sẽ không có thằng thumbnail ở phía bên dưới thay vào đó chúng ta sẽ làm giống thằng shopee là sẽ có phần tên sản phẩm hiện bên phía `slider`
+
+  ++ Phần lớn khi đi làm dùng `Ref` để thao tác trực tiếp với component, thao tác trực tiếp với cái function của nó chẳng hạn
+
+  ++ Đối với thằng `ImageGallery` chúng ta dùng ref bởi vì chúng ta muốn truy cập tới `một vài function` của thằng `ImageGallery`(có thể hiểu rằng ref chính là cầu nối giúp chúng ta chọc trực tiếp tới thư viện)
+
+  ++ Chúng ta sau này đi làm việc người ta trả tiền cao là việc chúng ta đọc công cụ và sử dụng `tool` đấy vào project
+
 > 56 Thêm Loading Skeleton
+
+- Làm sao có thể làm được hiệu ứng như trên -> Điều quan trọng là chúng ta đọc và chúng ta hiểu nó như thế nào
 
 > 57 Hoàn thiện view detail page
 
+- Lấy data từ id sau khi gọi xuống BE để `get data`
+
 > 58 Quá trình xây dựng giao diện
+
+- Tổng kết lại quá trình xây dựng sản phẩm
+
+- Người ta thuê chúng ta về để sau này có thể xử lý được phần logic , handle `sự kiện` đối với sản phẩm của khách hàng, chứ người ta không thuê chúng ta về `ngồi chơi xơi nước` đâu -> Trong quá trình chúng ta làm chúng ta cần phải đọc tài liệu, search google và cần phải đọc ngược lại mã nguồn của thư viện để biết rằng chúng ta có thể áp dụng công nghệ đó như thế nào
 
 ## Module Orders
 

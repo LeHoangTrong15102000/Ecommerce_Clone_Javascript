@@ -113,6 +113,11 @@ export const callUploadBookImg = (fileImg) => {
  * - Thực hiện 2 Api là getListBook(theo pagination) và getCategory
  */
 
+// get book detail
+export const callFetchBookById = (bookId) => {
+  return axios.get(`/api/v1/book/${bookId}`);
+};
+
 /**
  * Api orders
  */

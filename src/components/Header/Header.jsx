@@ -72,8 +72,12 @@ const Header = () => {
             </div>
             <div className="page-header__logo">
               <span className="logo">
-                <FaReact className="rotate icon-react" />
-                <span>Hỏi Dân IT</span>
+                <Link to="/" style={{ display: 'flex', justifyContent: 'center' }}>
+                  {' '}
+                  <FaReact className="rotate icon-react" />
+                  <span>Hỏi Dân IT</span>
+                </Link>
+
                 <VscSearchFuzzy
                   className="icon-search"
                   style={{ left: 30, top: 20, marginLeft: 10 }}
