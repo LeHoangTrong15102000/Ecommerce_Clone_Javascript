@@ -26,7 +26,7 @@ const BookPage = () => {
 
       setTimeout(() => {
         setDataBook(rawData);
-      }, 1500);
+      }, 1000);
     }
   };
 
