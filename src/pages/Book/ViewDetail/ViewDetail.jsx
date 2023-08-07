@@ -6,6 +6,8 @@ import { MinusOutlined, PlusOutlined } from '@ant-design/icons';
 import { BsCartPlus } from 'react-icons/bs';
 import { Col, Divider, Rate, Row } from 'antd';
 import BookLoader from '../BookLoader';
+import { useDispatch } from 'react-redux';
+import { doAddBookAction } from '../../../redux/order/orderSlice';
 
 const ViewDetail = (props) => {
   const { dataBook } = props;
@@ -14,6 +16,9 @@ const ViewDetail = (props) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const refGallery = useRef(null);
+
+  const [currentQuantity, setCurrentQuantity] = useState(1);
+  const dispatch = useDispatch();
 
   const images = dataBook?.items ?? [];
 
@@ -80,6 +85,35 @@ const ViewDetail = (props) => {
     setIsOpenModalGallery(true);
     setCurrentIndex(refGallery?.current?.getCurrentIndex() ?? 0); // lấy ra cái index hiện tại(image đang đứng hiên tại -> trả về number)
     // refGallery?.current?.fullscreen()
+  };
+
+  const handleChangeButton = (type) => {
+    if (type === 'MINUS') {
+      if (currentQuantity - 1 <= 0) return;
+      setCurrentQuantity(currentQuantity - 1);
+    }
+
+    if (type === 'PLUS') {
+      if (currentQuantity === +dataBook.quantity) return; // max, nếu đã bằng thì không cho cộng nữa
+      setCurrentQuantity(currentQuantity + 1);
+    }
+  };
+
+  const handleChangeInput = (value) => {
+    // Nếu giá trị không phải là isNaN(là một số nguyên hay không)
+    const quantityBookInStorage = dataBook.quantity - dataBook.sold;
+    if (!isNaN(value)) {
+      if (+value > 0 && +value < +quantityBookInStorage) {
+        setCurrentQuantity(+value); // +value là lấy value là số dương
+      } else if (+value > +quantityBookInStorage) {
+        setCurrentQuantity(+quantityBookInStorage);
+      }
+    }
+  };
+
+  // truyền số lượng đông thời truyền luôn thông tin sản phẩm vừa mua
+  const handleAddToCart = (quantity, book) => {
+    dispatch(doAddBookAction({ quantity, detail: book, _id: book._id }));
   };
 
   const onChange = (value) => {
@@ -149,11 +183,15 @@ const ViewDetail = (props) => {
                   <div className="quantity">
                     <span className="left-side">Số lượng</span>
                     <span className="right-side">
-                      <button>
+                      <button onClick={() => handleChangeButton('MINUS')}>
                         <MinusOutlined />
                       </button>
-                      <input defaultValue={1} />
-                      <button>
+                      <input
+                        // defaultValue={1}
+                        value={currentQuantity}
+                        onChange={(event) => handleChangeInput(event.target.value)}
+                      />
+                      <button onClick={() => handleChangeButton('PLUS')}>
                         <PlusOutlined />
                       </button>
                     </span>
@@ -168,7 +206,10 @@ const ViewDetail = (props) => {
                   </div>
 
                   <div className="buy">
-                    <button className="cart">
+                    <button
+                      className="cart"
+                      onClick={() => handleAddToCart(currentQuantity, dataBook)}
+                    >
                       <BsCartPlus className="icon-cart" />
                       <span>Thêm vào giỏ hàng</span>
                     </button>

@@ -22,11 +22,35 @@
 
 - Bài tập add và remove product
 
+- Xử lý cái hiệu ứng tăng giảm trong giỏ hàng, nhấn vào thêm giỏ hàng thì sẽ cập nhật vào bên trong con redux
+
+- Chúng ta sẽ lấy thông tin sản phẩm mà thêm vào giỏ hàng(phải coi là cách lưu data vào như thế nào) -> Để sau này chúng ta sẽ lấy thông tin này để hiển thị động lên `icon cart`
+
+- Trong Array giỏ hàng chúng ta sẽ lưu 3 thuộc tính: quantity, `_id`, detail: {id: abc , name: abc, price, category} (trong đây chứa chi tiết sản phẩm)
+
 > 61 Bài tập hiển thị số lượng giỏ hàng
 
 - Bài tập hiển thị số lượng giỏ hàng
 
+- Chúng ta phải tính toán lại biến quantity lưu bên trong thz Redux nếu nó vượt qua số lượng sản phẩm có trong kho thì chúng ta sẽ `thông báo` và gán nó chính bằng số lượng trong kho của chúng ta luôn
+
+- Component `Badge` của thằng `antd` mặc định nó sẽ ẩn đi khi mà nó có giá trị là 0, nên để show cho nó giá trị là `0` thì chúng ta cần sử dụng props của thằng antd là `showZero`
+
 > 62 Design Preview Cart
+
+- Moi data từ bên trong con redux và render nó vào trong `cart` sử dụng `popover` của thằng `antd`
+
+- Nhờ có việc sử dụng thằng redux nên data giữa các component của chúng ta nó được lưu lại
+
+- Ở thực tế thì cái Modal và Popover nó thường hiển thị ở bên ngoài cái `div id="root"` của chúng ta, hiển thị ở bên ngoài cái div root thì nó sẽ giúp chúng ta css cực kì dễ(ví dụ như chúng ta muốn override lên như z-index) -> Thành ra đối với các thư viện xử ký animation hoặc là làm các hiệu ứng thông thường nó sẽ ra ngoài cái `div id="root"`
+
+  ++ Lý do thứ 2 là `div root` chứa source code của React, source của các component nó css lẫn vào nhau
+
+  ++ Việc nằm ra ngoài cái div root thì nó sẽ cung cấp sự thoải mái cho chúng ta, chúng ta sẽ không bị ảnh hưởng css của bố con thằng nào hết
+
+  ++ Để định nghĩa class cho `Popover` chúng ta nên định nghĩa class riêng của chúng ta, chúng ta không nên ghi đè lại class của thư viện, như vậy nếu như sau này chúng ta dùng component ở nơi khác thì nó sẽ bị ảnh hưởng code
+
+  ++ Nếu chúng ta style cho thằng `Popover` bên trong file scss của header thì nó sẽ không ăn đâu, nên chúng ta sẽ định nghĩa file `scss global`
 
 > 63 Design Base order Page
 
