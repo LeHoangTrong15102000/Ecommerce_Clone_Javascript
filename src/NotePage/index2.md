@@ -54,9 +54,13 @@
 
 > 63 Design Base order Page
 
+- Khi nhấn vào `Xem giỏ hàng` thì cần phải vào trang `Giỏ hàng`
+
 > 64 Bài tập order page
 
 > 65 Bài tập Payment page
+
+- Làm thêm cái màn hình nữa để nhập thông tin người dùng vào
 
 > 66 Api Create An Order
 

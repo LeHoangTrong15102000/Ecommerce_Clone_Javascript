@@ -1,3 +1,3 @@
-import BookDetail from './Book';
+import BookPage from './Book';
 
-export default BookDetail;
+export default BookPage;

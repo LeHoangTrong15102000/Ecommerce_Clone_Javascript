@@ -102,12 +102,16 @@ const ViewDetail = (props) => {
   const handleChangeInput = (value) => {
     // Nếu giá trị không phải là isNaN(là một số nguyên hay không)
     const quantityBookInStorage = dataBook.quantity - dataBook.sold;
+
+    // isNaN là không là một số nguyên
     if (!isNaN(value)) {
       if (+value > 0 && +value < +quantityBookInStorage) {
         setCurrentQuantity(+value); // +value là lấy value là số dương
       } else if (+value > +quantityBookInStorage) {
         setCurrentQuantity(+quantityBookInStorage);
       }
+    } else {
+      setCurrentQuantity(1);
     }
   };
 

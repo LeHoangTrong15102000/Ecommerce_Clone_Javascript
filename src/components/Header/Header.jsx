@@ -78,7 +78,7 @@ const Header = () => {
               </div>
             );
           })}
-          <div className="book">
+          {/* <div className="book">
             <img src="https://picsum.photos/id/1015/250/150/" />
             <div>Đại việt Sử ký Toàn Thư Trọn bộ</div>
             <div>1555.555 đ</div>
@@ -87,7 +87,7 @@ const Header = () => {
             <img src="https://picsum.photos/id/1015/250/150/" />
             <div>Đại việt Sử ký Toàn Thư Trọn bộ</div>
             <div>1555.555 đ</div>
-          </div>
+          </div> */}
         </div>
         <div className="pop-cart-footer">
           <button>Xem giỏ hàng</button>

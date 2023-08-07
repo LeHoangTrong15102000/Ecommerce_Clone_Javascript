@@ -32,10 +32,11 @@ const orderSlice = createSlice({
       state.carts = carts;
       message.success('Sản phẩm đã được thêm vào Giỏ hàng');
     },
+    doUpdateCartAction: (state, action) => {},
   },
   extraReducers: {},
 });
 
-export const { doAddBookAction } = orderSlice.actions;
+export const { doAddBookAction, doUpdateCartAction } = orderSlice.actions;
 
 export default orderSlice.reducer;
