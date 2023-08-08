@@ -122,6 +122,23 @@ export const callFetchBookById = (bookId) => {
  * Api orders
  */
 
+// Api create an order
+export const callPlaceOrder = (data) => {
+  // Phải dùng 3 dấu chấm, nếu không phải ghi chính xác ra cái data cần truyền vào
+  return axios.post('api/v1/order', { ...data });
+};
+
+// Api payment
+
+// Api xem lịch sử đơn hàng
+export const callOrderHistory = () => {
+  return axios.get('/api/v1/history');
+};
+
+/**
+ * Api Update thông tin user
+ */
+
 /**
  * Api dashboard
  */

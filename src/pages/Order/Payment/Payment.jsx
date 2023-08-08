@@ -1,18 +1,34 @@
-import { DeleteTwoTone, SmileOutlined } from '@ant-design/icons';
-import { Col, Row, Form, Divider, Button, Radio, Input, Spin, Result } from 'antd';
+import { DeleteTwoTone, LoadingOutlined, SmileOutlined } from '@ant-design/icons';
+import {
+  Col,
+  Row,
+  Form,
+  Divider,
+  Button,
+  Radio,
+  Input,
+  Spin,
+  Result,
+  message,
+  notification,
+} from 'antd';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import '../order.scss';
-import { doDeleteItemCartAction } from '../../../redux/order/orderSlice';
+import {
+  doDeleteItemCartAction,
+  doPlaceOrderAction,
+} from '../../../redux/order/orderSlice';
 import { Link } from 'react-router-dom';
+import { callPlaceOrder } from '../../../services/api';
 
-const { TextArea } = Input;
+const { TextArea } = Input; // Chỗ này có thể khai báo như này hoặc là có thể Input.TextArea
 const Payment = (props) => {
   const { setCurrentStep } = props;
   const { carts } = useSelector((state) => state.order);
   const { user } = useSelector((state) => state.account);
 
-  // console.log('>>>> Check user', user);
+  // console.log('>>>> Check  carts', carts);
 
   const dispatch = useDispatch();
   const [form] = Form.useForm();
@@ -39,7 +55,42 @@ const Payment = (props) => {
   }, [carts]);
 
   const handleFinish = async (values) => {
+    setIsSubmit(true);
     const { fullName, phone, address } = values;
+    if (fullName === '' || phone === '' || address === '') {
+      message.error('Vui lòng nhập đầy đủ thông tin');
+      return;
+    }
+
+    const detailOrder = carts.map((item, index) => {
+      return {
+        bookName: item.detail.mainText,
+        quantity: item.quantity,
+        _id: item._id,
+      };
+    });
+
+    //  Build data cần build lên
+    const data = {
+      name: values.fullName,
+      phone: values.phone,
+      address: values.address,
+      totalPrice: totalPrice,
+      detail: detailOrder,
+    };
+
+    const res = await callPlaceOrder(data);
+    if (res && res.data) {
+      message.success('Đặt hàng thành công');
+      dispatch(doPlaceOrderAction());
+      setCurrentStep(2);
+    } else {
+      notification.error({
+        message: 'Có lỗi xảy ra',
+        description: res.message,
+      });
+    }
+
     setIsSubmit(true);
   };
 
@@ -121,7 +172,7 @@ const Payment = (props) => {
                         },
                       ]}
                     >
-                      <Input size="middle" />
+                      <Input placeholder="FullName" />
                     </Form.Item>
 
                     <Form.Item
@@ -133,17 +184,17 @@ const Payment = (props) => {
                         { required: true, message: 'Số điện thoại không được để trống' },
                       ]}
                     >
-                      <Input />
+                      <Input placeholder="Phone" />
                     </Form.Item>
 
                     <Form.Item
                       labelCol={{ span: 24 }}
                       label="Địa chỉ"
                       name="address"
-                      style={{ marginBottom: '12px' }}
+                      style={{ marginBottom: '24px' }}
                       rules={[{ required: true, message: 'Địa chỉ không được để trống' }]}
                     >
-                      <TextArea rows={4} />
+                      <TextArea rows={4} maxLength={100} allowClear />
                     </Form.Item>
                   </Form>
 
@@ -174,12 +225,17 @@ const Payment = (props) => {
                   <Divider style={{ margin: '10px 0' }} />
                   <button
                     htmlType="submit"
+                    disabled={isSubmit}
                     // loading={isSubmit}
                     onClick={() => {
-                      form.submit();
-                      setCurrentStep(2);
+                      form.submit(); // submit() nó sẽ fire cái hàm handleFinish
                     }}
                   >
+                    {isSubmit && (
+                      <span>
+                        <LoadingOutlined />
+                      </span>
+                    )}
                     Đặt Hàng ({carts?.length ?? 0})
                   </button>
                 </div>

@@ -4,6 +4,7 @@ import { Button, Result, Steps } from 'antd';
 import Payment from './Payment/Payment';
 import { SmileOutlined } from '@ant-design/icons';
 import './order.scss';
+import { Link } from 'react-router-dom';
 
 const OrderPage = (props) => {
   const [currentStep, setCurrentStep] = useState(0);
@@ -40,9 +41,11 @@ const OrderPage = (props) => {
               icon={<SmileOutlined />}
               title="Đơn hàng đã được đặt thành công"
               extra={
-                <Button type="primary" style={{ backgroundColor: '#1677ff' }}>
-                  Trang chủ
-                </Button>
+                <Link to="/">
+                  <Button type="primary" style={{ backgroundColor: '#1677ff' }}>
+                    Trang chủ
+                  </Button>
+                </Link>
               }
             />
           )}

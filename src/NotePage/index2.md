@@ -58,6 +58,8 @@
 
 > 64 Bài tập order page
 
+- Cần phải build được cục Api trước khi gửi lên cho server xử lý
+
 > 65 Bài tập Payment page
 
 - Trong đầu chúng ta cần phải nhảy số rằng là nếu bước bằng 1 chúng ta cần phải render nội dung ứng với bước bằng 1
@@ -66,7 +68,13 @@
 
 > 66 Api Create An Order
 
+- Tạo một cái đơn hàng
+
 > 67 Bài tập View Order History
+
+- Sau khi đặt hàng thành công, thì tạo giao diện xem lịch sử để xem người dùng đã đặt những đơn hàng nào
+
+- Giới thiệu 1 công cụ đôi khi sau này đi làm chúng ta sẽ dùng tới đó là hiển thị data dưới dạng `JSON`
 
 > 68 Bài tập Update Current User
 

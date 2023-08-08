@@ -21,6 +21,7 @@ import UserTable from './components/Admin/User/UserTable';
 import BookPage from './pages/Book/Book';
 import ContactPage from './pages/contact';
 import OrderPage from './pages/Order';
+import OrderHistory from './pages/OrderHistory';
 
 const Layout = () => {
   return (
@@ -74,6 +75,10 @@ export default function App() {
         {
           path: 'order',
           element: <OrderPage />,
+        },
+        {
+          path: 'history',
+          element: <OrderHistory />,
         },
       ],
     },

@@ -58,11 +58,20 @@ const orderSlice = createSlice({
     doDeleteItemCartAction: (state, action) => {
       state.carts = state.carts.filter((item) => item._id !== action.payload._id);
     },
+    // Sau khi đặt hàng  thành công muốn cho cái giỏ hàng của chúng ta trống trơn thì cần phải cập nhật lại con redux
+    doPlaceOrderAction: (state, action) => {
+      // reset lại carts cho nó trở lại rỗng
+      state.carts = [];
+    },
   },
   extraReducers: {},
 });
 
-export const { doAddBookAction, doUpdateCartAction, doDeleteItemCartAction } =
-  orderSlice.actions;
+export const {
+  doAddBookAction,
+  doUpdateCartAction,
+  doDeleteItemCartAction,
+  doPlaceOrderAction,
+} = orderSlice.actions;
 
 export default orderSlice.reducer;
