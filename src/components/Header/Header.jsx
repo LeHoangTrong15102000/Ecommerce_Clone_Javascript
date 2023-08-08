@@ -90,7 +90,9 @@ const Header = () => {
           </div> */}
         </div>
         <div className="pop-cart-footer">
-          <button>Xem giỏ hàng</button>
+          <Link to="/order">
+            <button>Xem giỏ hàng</button>
+          </Link>
         </div>
       </div>
     );
@@ -117,7 +119,7 @@ const Header = () => {
                 <Link to="/" style={{ display: 'flex', justifyContent: 'center' }}>
                   {' '}
                   <FaReact className="rotate icon-react" />
-                  <span>Hỏi Dân IT</span>
+                  <span>Tiki Clone</span>
                 </Link>
 
                 <VscSearchFuzzy

@@ -12,6 +12,8 @@ import { doAddBookAction } from '../../../redux/order/orderSlice';
 const ViewDetail = (props) => {
   const { dataBook } = props;
 
+  // console.log(dataBook);
+
   const [isOpenModalGallery, setIsOpenModalGallery] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
 

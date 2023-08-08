@@ -60,6 +60,8 @@
 
 > 65 Bài tập Payment page
 
+- Trong đầu chúng ta cần phải nhảy số rằng là nếu bước bằng 1 chúng ta cần phải render nội dung ứng với bước bằng 1
+
 - Làm thêm cái màn hình nữa để nhập thông tin người dùng vào
 
 > 66 Api Create An Order
