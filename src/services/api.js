@@ -172,3 +172,7 @@ export const callUpdatePassword = (email, old_password, new_password) => {
 /**
  * Api dashboard
  */
+
+export const callFetchDashBoard = () => {
+  return axios.get('api/v1/database/dashboard');
+};

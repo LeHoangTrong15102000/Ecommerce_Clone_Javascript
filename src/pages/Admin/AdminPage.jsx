@@ -1,12 +1,8 @@
 // import InputSearch from './../../components/Admin/UserTable/InputSearch';
-import UserTable from './../../components/Admin/User/UserTable';
 
 const AdminPage = () => {
-  return (
-    <>
-      <UserTable />
-    </>
-  );
+  // Viết phần admin dashboard ở đây
+  return <>Dashboard ở đây đây nf trời ơi là trời</>;
 };
 
 export default AdminPage;

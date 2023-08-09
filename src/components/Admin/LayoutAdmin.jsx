@@ -27,7 +27,11 @@ const items = [
     icon: <AppstoreOutlined />,
   },
   {
-    label: <span>Manage Users</span>,
+    label: (
+      <Link to="/admin/user">
+        <span>Manage Users</span>
+      </Link>
+    ),
     key: 'user',
     icon: <UserOutlined />,
     children: [

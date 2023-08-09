@@ -26,12 +26,13 @@ const UserInfo = () => {
   const [isSubmit, setIsSubmit] = useState(false);
   const [form] = Form.useForm();
 
-  useEffect(() => {
-    form.setFieldValue('_id', user.id);
-    form.setFieldValue('fullName', user.fullName);
-    form.setFieldValue('email', user.email);
-    form.setFieldValue('phone', user.phone);
-  }, []);
+  // Có thể dùng useEffect mà cũng có thể dùng props initialValues của `Form`
+  // useEffect(() => {
+  //   form.setFieldValue('_id', user.id);
+  //   form.setFieldValue('fullName', user.fullName);
+  //   form.setFieldValue('email', user.email);
+  //   form.setFieldValue('phone', user.phone);
+  // }, []);
 
   const urlAvatar = `${import.meta.env.VITE_BACKEND_URL}/images/avatar/${
     tempAvatar || user?.avatar
@@ -135,7 +136,18 @@ const UserInfo = () => {
 
         {/* Form */}
         <Col sm={24} md={12}>
-          <Form name="basic" onFinish={handleFinish} form={form} autoComplete="off">
+          <Form
+            name="basic"
+            onFinish={handleFinish}
+            form={form}
+            autoComplete="off"
+            initialValues={{
+              _id: user.id,
+              fullName: user.fullName,
+              email: user.email,
+              phone: user.phone,
+            }}
+          >
             <Form.Item
               hidden
               labelCol={{ span: 24 }}

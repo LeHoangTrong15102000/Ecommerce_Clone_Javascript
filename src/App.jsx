@@ -12,7 +12,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { doGetAccountAction } from './redux/account/accountSlice';
 import Loading from './components/Loading';
 import NotFound from './components/NotFound';
-import AdminPage from './pages/admin';
+import AdminPage from './pages/Admin';
 import ProtectedRoute from './components/ProtectedRoute';
 import LayoutAdmin from './components/Admin/LayoutAdmin';
 import './styles/reset.scss';
@@ -22,6 +22,7 @@ import BookPage from './pages/Book/Book';
 import ContactPage from './pages/contact';
 import OrderPage from './pages/Order';
 import OrderHistory from './pages/OrderHistory';
+import Order from './pages/Admin/Order';
 
 const Layout = () => {
   return (
@@ -45,7 +46,7 @@ export default function App() {
 
     const res = await callFetchAccount();
 
-    console.log('.>>>> Check account', res);
+    // console.log('.>>>> Check account', res);
 
     //  Mỗi là chúng ta F5 lại trang, bản chất của vấn đề ở đây là chúng ta gọi lại api và chúng ta lấy thông tin user
     if (res && res?.data) dispatch(doGetAccountAction(res.data)); // Sau khi đã lấy được thông tin user rồi thì chúng ta nạp ngược lại redux
@@ -107,6 +108,10 @@ export default function App() {
         {
           path: 'book',
           element: <Book />,
+        },
+        {
+          path: 'order',
+          element: <Order />,
         },
       ],
     },
