@@ -13,6 +13,8 @@ const initialState = {
     avatar: '',
     id: '',
   },
+  // avatar tạm thời hiện trong modal
+  tempAvatar: '',
 };
 
 // Nếu làm như này thì không cần dùng action bình thường nữa
@@ -56,6 +58,15 @@ export const accountSlice = createSlice({
         id: '',
       };
     },
+    doUpdateUserInfoAction: (state, action) => {
+      state.user.avatar = action.payload.avatar;
+      state.user.fullName = action.payload.fullName;
+      state.user.phone = action.payload.phone;
+    },
+    doUploadAvatarAction: (state, action) => {
+      // avatar tam thời, phải cập nhật user thì mới có avatar chính thức
+      state.tempAvatar = action.payload.avatar;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -81,6 +92,12 @@ export const accountSlice = createSlice({
   },
 });
 
-export const { doLoginAction, doGetAccountAction, doLogoutAction } = accountSlice.actions;
+export const {
+  doLoginAction,
+  doGetAccountAction,
+  doLogoutAction,
+  doUpdateUserInfoAction,
+  doUploadAvatarAction,
+} = accountSlice.actions;
 
 export default accountSlice.reducer;

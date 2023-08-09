@@ -78,6 +78,16 @@
 
 > 68 Bài tập Update Current User
 
+- Trong `quản lý tài khoản` có thể thay đổi được Avatar, tên hiển thị và số điện thoại người dùng
+
+- Để giải quyết phần `Cập nhật thông tin` chúng ta cần phải có 2 Api
+  ++ Api đầu tiền là `Upload hình ảnh`
+  ++ Api thứ 2 là cập nhật thông tin người dùng `Upload info user`
+
+  ++ Sau khi upload hình ảnh thành công chúng ta cần phải trả về cái tên file ảnh upload đó -> Sau đó đưa nó vào chung với phần cập nhật thông tin -> Sau đó gọi Apii cập nhật để cập nhật thông tin người dùng
+
+- Để giải quyết phần `Thay đổi thông tin mật khẩu` chúng ta cần
+
 > 69 Bài tập Display Order Page + Api Dashboard
 
 > 70 Các bug còn tồn đọng

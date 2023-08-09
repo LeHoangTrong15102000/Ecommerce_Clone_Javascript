@@ -45,6 +45,8 @@ export default function App() {
 
     const res = await callFetchAccount();
 
+    console.log('.>>>> Check account', res);
+
     //  Mỗi là chúng ta F5 lại trang, bản chất của vấn đề ở đây là chúng ta gọi lại api và chúng ta lấy thông tin user
     if (res && res?.data) dispatch(doGetAccountAction(res.data)); // Sau khi đã lấy được thông tin user rồi thì chúng ta nạp ngược lại redux
   };
