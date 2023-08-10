@@ -35,7 +35,7 @@ const ChangePassword = () => {
         md={12}
         style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
       >
-        <Row gutter={[20, 20]}>
+        <Row gutter={[10, 10]}>
           <Col span={24}>
             <Form
               name="basic"

@@ -90,4 +90,8 @@
 
 > 69 Bài tập Display Order Page + Api Dashboard
 
+- Dùng component có sẵn có của thằng antd để xây dựng
+
 > 70 Các bug còn tồn đọng
+
+- Bug cuối cùng là `activeNav` để làm được điều đấy chúng ta cần có cơ chế gì đó để lưu lại đường link này -> Chúng ta sẽ căn cứ vào đường Link Url sau đó set lại trạng thái `active` của chúng ta

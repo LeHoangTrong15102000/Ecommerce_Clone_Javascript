@@ -25,10 +25,13 @@ import OrderHistory from './pages/OrderHistory';
 import Order from './pages/Admin/Order';
 
 const Layout = () => {
+  const [searchTerm, setSearchTerm] = useState('');
   return (
     <div className="layout-app">
-      <Header />
-      <Outlet />
+      {/* truyền props theo cha con */}
+      <Header searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+      {/* Truyền context theo cha con */}
+      <Outlet context={[searchTerm, setSearchTerm]} />
       <Footer />
     </div>
   );
@@ -77,11 +80,19 @@ export default function App() {
         },
         {
           path: 'order',
-          element: <OrderPage />,
+          element: (
+            <ProtectedRoute>
+              <OrderPage />
+            </ProtectedRoute>
+          ),
         },
         {
           path: 'history',
-          element: <OrderHistory />,
+          element: (
+            <ProtectedRoute>
+              <OrderHistory />
+            </ProtectedRoute>
+          ),
         },
       ],
     },

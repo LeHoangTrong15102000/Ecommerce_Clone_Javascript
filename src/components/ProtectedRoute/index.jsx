@@ -6,7 +6,11 @@ const RoleBaseRoute = (props) => {
   const user = useSelector((state) => state.account.user);
   const userRole = user.role;
 
-  if (isAdminRoute && userRole === 'ADMIN') {
+  // dòng 2 thứ Có nghĩa là người dùng đã đăng nhập rồi
+  if (
+    (isAdminRoute && userRole === 'ADMIN') ||
+    (!isAdminRoute && (userRole === 'USER' || userRole === 'ADMIN'))
+  ) {
     return <>{props.children}</>;
   } else {
     return <NotPermitted />;

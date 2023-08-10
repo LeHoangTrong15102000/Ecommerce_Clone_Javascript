@@ -15,9 +15,11 @@ import {
 import './home.scss';
 import { callFetchCategory, callFetchListBook, callLogin } from '../../services/api';
 import { useEffect, useState } from 'react';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate, useOutletContext } from 'react-router-dom';
 
 const Home = () => {
+  const [searchTerm, setSearchTerm] = useOutletContext(); // Nó không khác gì dùng state
+
   const navigate = useNavigate();
   const [listCategory, setListCategory] = useState([]);
   const [form] = Form.useForm();
@@ -48,7 +50,7 @@ const Home = () => {
 
   useEffect(() => {
     fetchBook();
-  }, [current, pageSize, filter, sortQuery]);
+  }, [current, pageSize, filter, sortQuery, searchTerm]);
 
   const fetchBook = async () => {
     setIsLoading(true);
@@ -60,6 +62,11 @@ const Home = () => {
 
     if (sortQuery) {
       query += `&${sortQuery}`;
+    }
+
+    // search tên sách bằng mainText
+    if (searchTerm) {
+      query += `&mainText=/${searchTerm}/i`; // seaarch tương đối há
     }
 
     const res = await callFetchListBook(query);
@@ -209,6 +216,7 @@ const Home = () => {
                   onClick={() => {
                     form.resetFields();
                     setFilter('');
+                    setSearchTerm('');
                   }}
                 />
               </div>

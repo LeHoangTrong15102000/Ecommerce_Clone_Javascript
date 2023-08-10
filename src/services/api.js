@@ -128,7 +128,14 @@ export const callPlaceOrder = (data) => {
   return axios.post('api/v1/order', { ...data });
 };
 
-// Api payment
+// get list order with pagination
+export const callFetchListOrder = (query) => {
+  return axios.get(`/api/v1/order?${query}`);
+};
+
+/**
+ *
+ */
 
 // Api xem lịch sử đơn hàng
 export const callOrderHistory = () => {

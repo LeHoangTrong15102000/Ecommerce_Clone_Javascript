@@ -14,7 +14,9 @@ import { doLogoutAction } from '../../redux/account/accountSlice';
 import { Link } from 'react-router-dom';
 import ManageAccount from '../../pages/User/ManageAccount/ManageAccount';
 
-const Header = () => {
+const Header = (props) => {
+  const { searchTerm, setSearchTerm } = props;
+
   const [openDrawer, setOpenDrawer] = useState(false);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const isAuthenticated = useSelector((state) => state.account.isAuthenticated);
@@ -69,6 +71,11 @@ const Header = () => {
       key: 'admin',
     });
   }
+
+  // Onchange khi thay đổi trên Input
+  // const handleChangeInput = (event) => {
+
+  // }
 
   const contentPopover = () => {
     return (
@@ -145,6 +152,8 @@ const Header = () => {
                 className="input-search"
                 type={'text'}
                 placeholder="Bạn tìm gì hôm nay"
+                value={searchTerm}
+                onChange={(event) => setSearchTerm(event.target.value)}
               />
             </div>
           </div>
