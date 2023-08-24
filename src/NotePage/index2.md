@@ -95,3 +95,6 @@
 > 70 Các bug còn tồn đọng
 
 - Bug cuối cùng là `activeNav` để làm được điều đấy chúng ta cần có cơ chế gì đó để lưu lại đường link này -> Chúng ta sẽ căn cứ vào đường Link Url sau đó set lại trạng thái `active` của chúng ta
+
+không được làm gì mà cũng khoing thích làm gì thì chịu rồi
+chịu thôi

@@ -16,6 +16,7 @@ import './home.scss';
 import { callFetchCategory, callFetchListBook, callLogin } from '../../services/api';
 import { useEffect, useState } from 'react';
 import { Navigate, useNavigate, useOutletContext } from 'react-router-dom';
+import MobileFilter from './MobileFilter';
 
 const Home = () => {
   const [searchTerm, setSearchTerm] = useOutletContext(); // Nó không khác gì dùng state
@@ -423,6 +424,9 @@ const Home = () => {
             </Spin>
           </Col>
         </Row>
+
+        {/* MobileFilter */}
+        <MobileFilter />
       </div>
     </div>
   );

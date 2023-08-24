@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Book from './pages/Admin/Book/Book';
 import Login from './pages/Login/Login';
@@ -62,24 +62,37 @@ export default function App() {
 
   const router = createBrowserRouter([
     {
-      path: '/',
+      path: '',
       element: <Layout />,
       errorElement: <NotFound />,
       children: [
         {
+          path: '/',
           index: true,
-          element: <Home />,
+          element: (
+            <Suspense fallback={<div className="text-center">Loading...</div>}>
+              <Home />
+            </Suspense>
+          ),
         },
         {
-          path: 'contact',
-          element: <ContactPage />,
+          path: '/contact',
+          element: (
+            <Suspense>
+              <ContactPage />
+            </Suspense>
+          ),
         },
         {
-          path: 'book/:slug',
-          element: <BookPage />,
+          path: '/book/:slug',
+          element: (
+            <Suspense>
+              <BookPage fallback={<div className="text-center">Loading...</div>} />
+            </Suspense>
+          ),
         },
         {
-          path: 'order',
+          path: '/order',
           element: (
             <ProtectedRoute>
               <OrderPage />
@@ -87,7 +100,7 @@ export default function App() {
           ),
         },
         {
-          path: 'history',
+          path: '/history',
           element: (
             <ProtectedRoute>
               <OrderHistory />

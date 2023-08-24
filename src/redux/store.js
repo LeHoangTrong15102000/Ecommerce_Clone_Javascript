@@ -20,7 +20,8 @@ const persistConfig = {
   key: 'root',
   version: 1,
   storage,
-  blacklist: ['account'],
+  whitelist: [],
+  blacklist: ['account'], // ko muốn account được quản lí thì đưa nó vào blacklist
 };
 
 const rootReducer = combineReducers({
