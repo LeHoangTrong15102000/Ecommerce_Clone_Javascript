@@ -1,4 +1,4 @@
-*** Base React Test Fresher | Udemy Hỏi Dân IT ***
+*** Tiki Clone | Le Hoang Trong ***
 
 - React 18
 - React Router 6
